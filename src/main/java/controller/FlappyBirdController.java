@@ -9,10 +9,11 @@ public class FlappyBirdController implements Runnable, TabListener, NewGameListe
     private final Field field;
     private final FlappyBirdFrame frame;
 
-    public FlappyBirdController(Field field){
+    public FlappyBirdController(Field field) {
         this.field = field;
-        this.frame = new FlappyBirdFrame(this, this);
+        this.frame = new FlappyBirdFrame(this, this, field);
     }
+
     public void run() {
         newGame();
     }
@@ -20,7 +21,6 @@ public class FlappyBirdController implements Runnable, TabListener, NewGameListe
     @Override
     public void newGame() {
         field.clear();
-        field.getBird().moveDown();
         frame.update(field);
     }
 
@@ -33,4 +33,7 @@ public class FlappyBirdController implements Runnable, TabListener, NewGameListe
         }
     }
 
+    public void handleTimer() {
+        field.update();
+    }
 }
