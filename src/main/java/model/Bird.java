@@ -15,23 +15,26 @@ public class Bird {
         y = startY;
     }
 
-    public void moveUp(){
+    public void moveDown(){
         y += 10;
     }
 
-    public void moveDown(){
+    public void moveUp(){
         y -= 10;
     }
 
     public int getX(){
         return x;
     }
+
     public int getY(){
         return y;
     }
+
     public int getWidth(){
         return WIDTH;
     }
+
     public int getWeigh(){
         return WEIGH;
     }

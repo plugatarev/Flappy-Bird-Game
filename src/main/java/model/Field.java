@@ -1,28 +1,30 @@
 package model;
 
-import jdk.swing.interop.SwingInterOpUtils;
-
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Field {
-    private final static int WEIGHT = 800, WIDTH = 800;
-    private Image backGround = new ImageIcon("src/main/resources/Background.png").getImage();
-    private Bird bird = new Bird(WIDTH / 4, WIDTH / 3 );
-    private Barrier barrier = new Barrier();
-    private int best;
+public class Field{
+    private final static int HEIGHT = 800, WIDTH = 800;
+    private final Image backGround = new ImageIcon("src/main/resources/Background.png").getImage();
+    private final Bird bird = new Bird(WIDTH / 4, WIDTH / 3 );
+    private Barrier curBarrier = new Barrier();
+    private Barrier nextBarrier = null;
+    private final List<Integer> scores = new ArrayList<>();
 
     public void update(){
-//        Barrier pred;
-//        if (bird.getX() > barrier.getCurrentPosition() + barrier.getWidth()){
-//            pred = barrier;
-//            barrier = new Barrier();
-//        }
-//        if (barrier.getCurrentPosition() > 0) barrier.moveBarrier();
-////        if (pred.getCurrentPosition() > 0) pred.moveBarrier();
-//        if (hasEnded()) return;
-        bird.moveUp();
+        //TODO: handle collisions with map borders
+        if (curBarrier.getCurrentPosition() > 0) curBarrier.moveBarrier();
+        if (nextBarrier != null && nextBarrier.getCurrentPosition() > 0) nextBarrier.moveBarrier();
+        if (bird.getX() + bird.getWidth() >= curBarrier.getCurrentPosition()) nextBarrier = new Barrier();
+        if (bird.getX() >= curBarrier.getCurrentPosition() + curBarrier.getWidth()){
+            curBarrier = nextBarrier;
+            nextBarrier = null;
+        }
 
+        bird.moveDown();
+        //TODO: add save current score
     }
     public boolean hasEnded() {
         return true;
@@ -32,18 +34,27 @@ public class Field {
 
     }
 
-    int getWeight(){
-        return WEIGHT;
+    public int getHeight(){
+        return HEIGHT;
     }
 
-    int getWidth(){
+    public int getWidth(){
         return WIDTH;
     }
+
     public Bird getBird(){
         return bird;
     }
 
     public Image getBackGround() {
         return backGround;
+    }
+
+    public Barrier getCurrentBarrier(){
+        return curBarrier;
+    }
+
+    public Barrier getNextBarrier(){
+        return nextBarrier;
     }
 }

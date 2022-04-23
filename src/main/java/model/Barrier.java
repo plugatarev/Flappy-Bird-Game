@@ -3,35 +3,33 @@ package model;
 import java.util.Random;
 
 public class Barrier {
-    private int currentPosition = 800;
-    private final int space = 150;
+    private int currentPosition = 750;
     final static Random random= new Random();
-    private final int WIDTH = 200;
+    private final int WIDTH = 100;
+    private final int SPACE = 200;
     private final int upperY;
-    private final int lowerY;
 
     Barrier(){
-        upperY = random.nextInt(500) + 50;
-        lowerY = 500 - space;
+        upperY = random.nextInt(500) + 200;
     }
 
-    void moveBarrier(){
+    public void moveBarrier(){
         currentPosition -= 5;
     }
 
-    int getWidth() {
+    public int getWidth() {
         return WIDTH;
     }
 
-    int getUpperY(){
+    public int getUpperY(){
         return upperY;
     }
 
-    int getLowerY(){
-        return lowerY;
+    public int getCurrentPosition(){
+        return currentPosition;
     }
 
-    int getCurrentPosition(){
-        return currentPosition;
+    public int getSpace(){
+        return SPACE;
     }
 }
