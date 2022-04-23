@@ -1,5 +1,6 @@
 package view;
 
+import model.Barrier;
 import model.Bird;
 import model.Field;
 
@@ -7,7 +8,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 
 public class FieldPanel extends JPanel {
     Field field;
@@ -16,8 +16,7 @@ public class FieldPanel extends JPanel {
         this.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-//                if (e.getKeyCode() == KeyEvent.VK_SPACE) listener.onTab();
-                listener.onTab();
+                if (e.getKeyCode() == KeyEvent.VK_SPACE) listener.onTab();
             }
         });
     }
@@ -40,7 +39,15 @@ public class FieldPanel extends JPanel {
     }
 
     private void drawBarriers(Graphics g){
-//        g.drawRect();
+        Barrier b1 = field.getCurrentBarrier();
+        Barrier b2 = field.getNextBarrier();
+        g.setColor(Color.CYAN);
+        g.fillRect(b1.getCurrentPosition(), b1.getUpperY(), b1.getWidth(), 702 - b1.getUpperY());
+        g.fillRect(b1.getCurrentPosition(), 0, b1.getWidth(), b1.getUpperY() - b1.getSpace());
+        if (b2 != null){
+            g.fillRect(b2.getCurrentPosition(), b2.getUpperY(), b2.getWidth(), 702 - b2.getUpperY());
+            g.fillRect(b2.getCurrentPosition(), 0, b2.getWidth(), b2.getUpperY() - b2.getSpace());
+        }
     }
 
     private void drawBackground(Graphics g){
