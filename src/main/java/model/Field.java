@@ -26,8 +26,12 @@ public class Field{
         bird.moveDown();
         //TODO: add save current score
     }
+
+    public void birdUp() {
+        bird.moveUp();
+    }
     public boolean hasEnded() {
-        return true;
+        return false;
     }
 
     public void clear(){
@@ -57,4 +61,5 @@ public class Field{
     public Barrier getNextBarrier(){
         return nextBarrier;
     }
+
 }

@@ -26,7 +26,7 @@ public class FlappyBirdController implements Runnable, TabListener, NewGameListe
 
     @Override
     public void onTab() {
-        field.update();
+        field.birdUp();
         frame.update(field);
         if (field.hasEnded()) {
             frame.end();
