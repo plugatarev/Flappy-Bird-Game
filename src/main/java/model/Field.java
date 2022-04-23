@@ -7,6 +7,7 @@ import java.util.List;
 
 public class Field{
     private final static int HEIGHT = 800, WIDTH = 800;
+    // CR: move to view
     private final Image backGround = new ImageIcon("src/main/resources/Background.png").getImage();
     private final Bird bird = new Bird(WIDTH / 4, WIDTH / 3 );
     private Barrier curBarrier = new Barrier();

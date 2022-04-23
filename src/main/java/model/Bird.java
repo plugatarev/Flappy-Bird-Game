@@ -6,8 +6,8 @@ import java.awt.*;
 public class Bird {
     private final int x;
     private int y;
-    private final int WIDTH = 150;
-    private final int WEIGH = 150;
+    private static final int WIDTH = 150;
+    private static final int HEIGHT = 150;
     private final Image image = new ImageIcon("src/main/resources/Bird.png").getImage();
 
     Bird(int startX, int startY){
@@ -16,10 +16,16 @@ public class Bird {
     }
 
     public void moveDown(){
+//        synchronized (LOCK) {
+//            direction = DOWN;
+//        }
         y += 10;
     }
 
     public void moveUp(){
+//        synchronized (LOCK) {
+//            direction = UP;
+//        }
         y -= 10;
     }
 
@@ -35,8 +41,8 @@ public class Bird {
         return WIDTH;
     }
 
-    public int getWeigh(){
-        return WEIGH;
+    public int getHeight(){
+        return HEIGHT;
     }
 
     public Image getImage(){

@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class FlappyBirdFrame extends JFrame {
+    // CR: move to .properties file
     private static final String NAME = "FlappyBird";
     private static final String MENU = "Menu";
     private static final String NEW_GAME = "New Game";

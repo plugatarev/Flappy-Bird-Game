@@ -11,6 +11,5 @@ public class Main {
         controller.run();
         timer = new Timer(300, e -> controller.handleTimer());
         timer.start();
-
     }
 }

@@ -25,7 +25,7 @@ public class FlappyBirdController implements Runnable, TabListener, NewGameListe
     }
 
     @Override
-    public void onTab() {
+    public void onGoUp() {
         field.birdUp();
         frame.update(field);
         if (field.hasEnded()) {
@@ -35,5 +35,6 @@ public class FlappyBirdController implements Runnable, TabListener, NewGameListe
 
     public void handleTimer() {
         field.update();
+        frame.repaint();
     }
 }

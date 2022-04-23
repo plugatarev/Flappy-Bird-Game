@@ -4,13 +4,12 @@ import java.util.Random;
 
 public class Barrier {
     private int currentPosition = 750;
-    final static Random random= new Random();
-    private final int WIDTH = 100;
-    private final int SPACE = 200;
+    private static final int WIDTH = 100;
+    private static final int SPACE = 200;
     private final int upperY;
 
     Barrier(){
-        upperY = random.nextInt(500) + 200;
+        upperY = new Random().nextInt(500) + 200;
     }
 
     public void moveBarrier(){
