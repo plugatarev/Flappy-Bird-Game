@@ -16,7 +16,7 @@ public class FieldPanel extends JPanel {
         this.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_SPACE) listener.onTab();
+                if (e.getKeyCode() == KeyEvent.VK_SPACE) listener.onGoUp();
             }
         });
     }
@@ -35,7 +35,7 @@ public class FieldPanel extends JPanel {
 
     private void drawBird(Graphics g){
         Bird bird = field.getBird();
-        g.drawImage(bird.getImage(), bird.getX(), bird.getY(), bird.getWidth(), bird.getWeigh(), null);
+        g.drawImage(bird.getImage(), bird.getX(), bird.getY(), bird.getWidth(), bird.getHeight(), null);
     }
 
     private void drawBarriers(Graphics g){
