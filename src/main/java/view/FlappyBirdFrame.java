@@ -51,7 +51,6 @@ public class FlappyBirdFrame extends JFrame {
 
         newGameItem.addActionListener(event -> newGameListener.newGame());
         exitItem.addActionListener(event -> System.exit(0));
-        //TODO:
         aboutGameItem.addActionListener(event -> printAboutInformation());
         highScoresItem.addActionListener(event -> printHighScoresInformation());
 
