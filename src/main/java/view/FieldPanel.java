@@ -54,7 +54,7 @@ public class FieldPanel extends JPanel {
 
     private void drawScore(Graphics g){
         g.setColor(Color.BLACK);
-        g.setFont(new Font("Monaco", Font.PLAIN, 100));
+        g.setFont(new Font("Times New Roman", Font.PLAIN, 100));
         g.drawString(String.valueOf(field.getCurrentScore()), field.getWidth() / 3 + 85, field.getHeight() / 7);
     }
 

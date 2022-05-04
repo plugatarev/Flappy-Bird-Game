@@ -62,12 +62,11 @@ public class FlappyBirdFrame extends JFrame {
 
     private void printHighScoresInformation() {
         List<Integer> scores = fieldPanel.field.getTableOfScores();
-        StringBuilder table = new StringBuilder();
+        StringBuilder table = new StringBuilder("<html>");
         for (Integer score : scores){
-            table.append(score).append("\n");
+            table.append(score).append("<br>");
         }
-        //TODO: "\n" - не воспринимается
-//        System.out.println(table.toString());
+        table.append("</html>");
         JLabel label = new JLabel(table.toString());
         System.out.println(label.getText());
         label.setFont(new Font("Arial", Font.BOLD, 18));
