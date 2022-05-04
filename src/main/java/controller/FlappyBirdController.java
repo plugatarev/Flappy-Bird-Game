@@ -1,10 +1,6 @@
 package controller;
 
 import model.Field;
-import utils.Position;
-import utils.Records;
-import utils.Size;
-import utils.ViewField;
 import view.FlappyBirdFrame;
 import view.NewGameListener;
 import view.TabListener;
