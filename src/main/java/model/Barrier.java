@@ -13,7 +13,7 @@ public class Barrier {
     }
 
     public void moveBarrier(){
-        currentPosition -= 5;
+        currentPosition -= 1;
     }
 
     public int getWidth() {

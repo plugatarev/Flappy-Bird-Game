@@ -1,36 +1,33 @@
 package view;
 
 import model.Field;
+import utils.Properties;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 public class FlappyBirdFrame extends JFrame {
-    // CR: move to .properties file
-    private static final String NAME = "FlappyBird";
-    private static final String MENU = "Menu";
-    private static final String NEW_GAME = "New Game";
-    private static final String EXIT = "Exit";
-    private static final String HIGH_SCORES = "High Scores";
-    private static final String ABOUT = "About";
-    private static final String[] WINNER_OPTIONS = {"New game", "Cancel"};
-    private static final String END_GAME = "End game";
+    private static final String NAME = Properties.getProperty("name");
+    private static final String MENU = Properties.getProperty("menu");
+    private static final String NEW_GAME = Properties.getProperty("new_game");
+    private static final String EXIT = Properties.getProperty("exit");
+    private static final String HIGH_SCORES = Properties.getProperty("high_scores");
+    private static final String ABOUT = Properties.getProperty("about");
+    private static final String[] CHOOSE_OPTIONS = {NEW_GAME, HIGH_SCORES, EXIT};
+    private static final String END_GAME = Properties.getProperty("end_game");
 
     private final NewGameListener newGameListener;
     private FieldPanel fieldPanel;
-    private final Field field;
     public FlappyBirdFrame(NewGameListener newGameListener, TabListener listener, Field field){
         super(NAME);
         this.newGameListener = newGameListener;
-        this.field = field;
-
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(null);
         this.setPreferredSize(new Dimension(field.getWidth(), field.getHeight()));
 
         setupMenu();
         createFieldPanel(listener);
-
         this.pack();
         this.setLocationRelativeTo(null);
         this.setVisible(true);
@@ -64,16 +61,22 @@ public class FlappyBirdFrame extends JFrame {
     }
 
     private void printHighScoresInformation() {
+        List<Integer> scores = fieldPanel.field.getTableOfScores();
+        StringBuilder table = new StringBuilder();
+        for (Integer score : scores){
+            table.append(score).append("\n");
+        }
+        //TODO: "\n" - не воспринимается
+//        System.out.println(table.toString());
+        JLabel label = new JLabel(table.toString());
+        System.out.println(label.getText());
+        label.setFont(new Font("Arial", Font.BOLD, 18));
+        label.setHorizontalAlignment(JLabel.CENTER);
+        JOptionPane.showMessageDialog(this, label, "High Score Table", JOptionPane.PLAIN_MESSAGE);
     }
 
     private void printAboutInformation() {
-        String information = """
-                Flappy Bird is an arcade-style game in which the player controls the bird Faby, which moves persistently to the right. 
-                The player is tasked with navigating Faby through pairs of pipes that have equally sized gaps placed at random heights. 
-                Faby automatically descends and only ascends when the player taps the touchscreen. 
-                Each successful pass through a pair of pipes awards the player one point. Colliding with a pipe or the ground ends the gameplay. 
-                During the game over screen, the player is awarded a bronze medal if they reached ten or more points, a silver medal from twenty 
-                points, a gold medal from thirty points, and a platinum medal from forty points.""";
+        String information = Properties.getProperty("about_information");
         JOptionPane.showMessageDialog(this, information);
     }
 
@@ -83,11 +86,18 @@ public class FlappyBirdFrame extends JFrame {
     }
 
     public void end() {
-        String message = "The end!";
-        int choice = JOptionPane.showOptionDialog(this, message, END_GAME,
-                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, WINNER_OPTIONS, WINNER_OPTIONS[1]);
-        if (choice == JOptionPane.YES_OPTION) {
-            newGameListener.newGame();
+        int result = JOptionPane.showOptionDialog(this, Properties.getProperty("choice"),
+                END_GAME,
+                JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                CHOOSE_OPTIONS,
+                CHOOSE_OPTIONS[2]);
+        if (result == JOptionPane.CANCEL_OPTION) System.exit(0);
+        if (result == JOptionPane.YES_OPTION) newGameListener.newGame();
+        if (result == JOptionPane.NO_OPTION) {
+            printHighScoresInformation();
+            end();
         }
     }
 }

@@ -1,32 +1,24 @@
 package model;
 
-import javax.swing.*;
-import java.awt.*;
-
 public class Bird {
     private final int x;
     private int y;
-    private static final int WIDTH = 150;
-    private static final int HEIGHT = 150;
-    private final Image image = new ImageIcon("src/main/resources/Bird.png").getImage();
-
+    private static final int WIDTH = 100;
+    private static final int HEIGHT = 100;
+    private int direction = 1;
     Bird(int startX, int startY){
         x = startX;
         y = startY;
     }
 
-    public void moveDown(){
-//        synchronized (LOCK) {
-//            direction = DOWN;
-//        }
-        y += 10;
+    public void move(){
+        if (direction == 1) y += direction;
+        else y += 2 * direction;
     }
 
-    public void moveUp(){
-//        synchronized (LOCK) {
-//            direction = UP;
-//        }
-        y -= 10;
+    public void setDefault(int startY){
+        direction = 1;
+        y = startY;
     }
 
     public int getX(){
@@ -45,7 +37,16 @@ public class Bird {
         return HEIGHT;
     }
 
-    public Image getImage(){
-        return image;
+    public synchronized void changeDirection(){
+        direction *= -1;
+    }
+
+    public boolean isTouchBarrier(Barrier b){
+        return ((x + WIDTH > b.getCurrentPosition() && x + WIDTH < b.getCurrentPosition() + b.getWidth() ||
+                (x > b.getCurrentPosition() && x < b.getCurrentPosition() + b.getWidth())) &&
+                (y + HEIGHT > b.getUpperY() || y < b.getUpperY() - b.getSpace()));
+    }
+    public boolean isTouchBorder(int height) {
+        return (y + HEIGHT > height - 95) || (y < 0);
     }
 }
