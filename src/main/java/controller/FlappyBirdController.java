@@ -10,7 +10,8 @@ import javax.swing.*;
 public class FlappyBirdController implements Runnable, TabListener, NewGameListener {
     private final Field field;
     private final FlappyBirdFrame frame;
-    Timer timer;
+    final Timer timer = new Timer(4, e -> this.handleTimer());
+
     public FlappyBirdController(Field field) {
         this.field = field;
         this.frame = new FlappyBirdFrame(this, this, field);
@@ -23,7 +24,6 @@ public class FlappyBirdController implements Runnable, TabListener, NewGameListe
     @Override
     public void newGame() {
         field.clear();
-        timer = new Timer(5, e -> this.handleTimer());
         timer.start();
     }
 

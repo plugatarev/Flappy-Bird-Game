@@ -16,21 +16,41 @@ public class FlappyBirdFrame extends JFrame {
     private static final String ABOUT = Properties.getProperty("about");
     private static final String[] CHOOSE_OPTIONS = {NEW_GAME, HIGH_SCORES, EXIT};
     private static final String END_GAME = Properties.getProperty("end_game");
-
     private final NewGameListener newGameListener;
     private FieldPanel fieldPanel;
+
     public FlappyBirdFrame(NewGameListener newGameListener, TabListener listener, Field field){
         super(NAME);
         this.newGameListener = newGameListener;
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(null);
         this.setPreferredSize(new Dimension(field.getWidth(), field.getHeight()));
-
         setupMenu();
         createFieldPanel(listener);
         this.pack();
         this.setLocationRelativeTo(null);
         this.setVisible(true);
+    }
+
+    public void update(Field field) {
+        fieldPanel.setField(field);
+        fieldPanel.repaint();
+    }
+
+    public void end() {
+        int result = JOptionPane.showOptionDialog(this, Properties.getProperty("choice"),
+                END_GAME,
+                JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                CHOOSE_OPTIONS,
+                CHOOSE_OPTIONS[2]);
+        if (result == JOptionPane.CANCEL_OPTION) System.exit(0);
+        if (result == JOptionPane.YES_OPTION) newGameListener.newGame();
+        if (result == JOptionPane.NO_OPTION) {
+            printHighScoresInformation();
+            end();
+        }
     }
 
     private void createFieldPanel(TabListener listener) {
@@ -68,7 +88,6 @@ public class FlappyBirdFrame extends JFrame {
         }
         table.append("</html>");
         JLabel label = new JLabel(table.toString());
-        System.out.println(label.getText());
         label.setFont(new Font("Arial", Font.BOLD, 18));
         label.setHorizontalAlignment(JLabel.CENTER);
         JOptionPane.showMessageDialog(this, label, "High Score Table", JOptionPane.PLAIN_MESSAGE);
@@ -77,26 +96,5 @@ public class FlappyBirdFrame extends JFrame {
     private void printAboutInformation() {
         String information = Properties.getProperty("about_information");
         JOptionPane.showMessageDialog(this, information);
-    }
-
-    public void update(Field field) {
-        fieldPanel.setField(field);
-        fieldPanel.repaint();
-    }
-
-    public void end() {
-        int result = JOptionPane.showOptionDialog(this, Properties.getProperty("choice"),
-                END_GAME,
-                JOptionPane.YES_NO_CANCEL_OPTION,
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                CHOOSE_OPTIONS,
-                CHOOSE_OPTIONS[2]);
-        if (result == JOptionPane.CANCEL_OPTION) System.exit(0);
-        if (result == JOptionPane.YES_OPTION) newGameListener.newGame();
-        if (result == JOptionPane.NO_OPTION) {
-            printHighScoresInformation();
-            end();
-        }
     }
 }

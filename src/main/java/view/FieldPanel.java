@@ -26,13 +26,12 @@ public class FieldPanel extends JPanel {
 //        });
         this.addMouseListener(new MouseAdapter() {
             @Override
-            public synchronized void mouseClicked(MouseEvent event) {
+            public void mouseClicked(MouseEvent event) {
                 listener.changeDirection();
             }
 
-            // e.g. when touchpad is used
             @Override
-            public synchronized void mousePressed(MouseEvent event) {
+            public void mousePressed(MouseEvent event) {
                 listener.changeDirection();
             }
         });
@@ -54,7 +53,7 @@ public class FieldPanel extends JPanel {
 
     private void drawScore(Graphics g){
         g.setColor(Color.BLACK);
-        g.setFont(new Font("Times New Roman", Font.PLAIN, 100));
+        g.setFont(new Font("Arial", Font.PLAIN, 100));
         g.drawString(String.valueOf(field.getCurrentScore()), field.getWidth() / 3 + 85, field.getHeight() / 7);
     }
 
