@@ -34,12 +34,11 @@ public class FlappyBirdController implements Runnable, TabListener, NewGameListe
 
     public void handleTimer() {
         field.update();
+        frame.update(field);
+        frame.repaint();
         if (field.hasEnded()) {
             timer.stop();
             frame.end();
-            return;
         }
-        frame.update(field);
-        frame.repaint();
     }
 }

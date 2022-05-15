@@ -5,19 +5,21 @@ public class Bird {
     private int y;
     private static final int WIDTH = 100;
     private static final int HEIGHT = 100;
-    private int direction = 1;
+    private static final int DOWN = 1;
+    private int direction = DOWN;
+
     Bird(int startX, int startY){
         x = startX;
         y = startY;
     }
 
-    public void move(){
-        if (direction == 1) y += direction;
+    public synchronized void move(){
+        if (direction == DOWN) y += direction;
         else y += 2 * direction;
     }
 
     public void setDefault(int startY){
-        direction = 1;
+        direction = DOWN;
         y = startY;
     }
 

@@ -11,14 +11,12 @@ public class Field{
     private Barrier nextBarrier = null;
     private final List<Integer> scores = new ArrayList<>();
     private int currentScore;
+
     public void update(){
-        if (nextBarrier != null && nextBarrier.getCurrentPosition() + nextBarrier.getWidth() > 0) {
+        if (nextBarrier != null) {
             nextBarrier.moveBarrier();
         }
-        else{
-            nextBarrier = null;
-        }
-        if (bird.getX() + bird.getWidth() >= curBarrier.getCurrentPosition() + curBarrier.getWidth() / 2 && nextBarrier == null) {
+        if (bird.getX() + bird.getWidth() >= curBarrier.getCurrentPosition() + curBarrier.getWidth() / 2) {
             nextBarrier = curBarrier;
             curBarrier = new Barrier();
             currentScore++;
@@ -28,10 +26,6 @@ public class Field{
         if (hasEnded()) {
             addNewResult(currentScore);
         }
-    }
-
-    private void addNewResult(int score){
-        if (score != 0 && !scores.contains(score)) scores.add(score);
     }
 
     public int getCurrentScore(){
@@ -73,6 +67,10 @@ public class Field{
 
     public Barrier getNextBarrier(){
         return nextBarrier;
+    }
+
+    private void addNewResult(int score){
+        if (score != 0 && !scores.contains(score)) scores.add(score);
     }
 
 }
