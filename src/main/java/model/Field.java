@@ -5,19 +5,32 @@ import java.util.Comparator;
 import java.util.List;
 
 public class Field{
-    private final static int HEIGHT = 800, WIDTH = 800;
+    private final static int HEIGHT = 800;
+    private final static int WIDTH = 800;
     private final Bird bird = new Bird(WIDTH / 4, HEIGHT / 3 );
     private Barrier curBarrier = new Barrier();
-    private Barrier nextBarrier = null;
+    private Barrier prevBarrier = null;
     private final List<Integer> scores = new ArrayList<>();
     private int currentScore;
 
+//    private static class FieldModel {
+//        private final Point birdPosition;
+//        private final Point barrierPosition;
+//        private final Point prevBarrierPositon;
+//        private final boolean isDownDirection;
+//    }
+//
+//    Field(FieldModel fieldModel) {
+//        Point birdPosition = fieldModel.birdPosition;
+//        bird = new Bird(birdPosition.x())
+//    }
+
     public void update(){
-        if (nextBarrier != null) {
-            nextBarrier.moveBarrier();
+        if (prevBarrier != null) {
+            prevBarrier.moveBarrier();
         }
         if (bird.getX() + bird.getWidth() >= curBarrier.getCurrentPosition() + curBarrier.getWidth() / 2) {
-            nextBarrier = curBarrier;
+            prevBarrier = curBarrier;
             curBarrier = new Barrier();
             currentScore++;
         }
@@ -38,15 +51,15 @@ public class Field{
     }
 
     public boolean hasEnded() {
-        if (nextBarrier != null) return bird.isTouchBarrier(curBarrier) || bird.isTouchBarrier(nextBarrier) || bird.isTouchBorder(HEIGHT);
-        return bird.isTouchBarrier(curBarrier) || bird.isTouchBorder(HEIGHT);
+        return bird.isTouchBarrier(curBarrier) || bird.isTouchBorder(HEIGHT) ||
+                (prevBarrier != null && bird.isTouchBarrier(prevBarrier));
     }
 
     public void clear(){
         curBarrier = new Barrier();
-        nextBarrier = null;
+        prevBarrier = null;
         currentScore = 0;
-        bird.setDefault(HEIGHT / 3);
+        bird.reset(HEIGHT / 3);
     }
 
     public int getHeight(){
@@ -65,8 +78,8 @@ public class Field{
         return curBarrier;
     }
 
-    public Barrier getNextBarrier(){
-        return nextBarrier;
+    public Barrier getPrevBarrier(){
+        return prevBarrier;
     }
 
     private void addNewResult(int score){

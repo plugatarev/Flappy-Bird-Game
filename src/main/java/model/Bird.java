@@ -5,6 +5,7 @@ public class Bird {
     private int y;
     private static final int WIDTH = 100;
     private static final int HEIGHT = 100;
+    // CR: boolean
     private static final int DOWN = 1;
     private int direction = DOWN;
 
@@ -18,7 +19,7 @@ public class Bird {
         else y += 2 * direction;
     }
 
-    public void setDefault(int startY){
+    public void reset(int startY){
         direction = DOWN;
         y = startY;
     }
@@ -48,6 +49,8 @@ public class Bird {
                 (x > b.getCurrentPosition() && x < b.getCurrentPosition() + b.getWidth())) &&
                 (y + HEIGHT > b.getUpperY() || y < b.getUpperY() - b.getSpace()));
     }
+
+    // CR: move to const
     public boolean isTouchBorder(int height) {
         return (y + HEIGHT > height - 95) || (y < 0);
     }

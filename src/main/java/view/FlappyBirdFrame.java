@@ -5,6 +5,8 @@ import utils.Properties;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.List;
 
 public class FlappyBirdFrame extends JFrame {
@@ -87,6 +89,7 @@ public class FlappyBirdFrame extends JFrame {
             table.append(score).append("<br>");
         }
         table.append("</html>");
+        // CR: without html?
         JLabel label = new JLabel(table.toString());
         label.setFont(new Font("Arial", Font.BOLD, 18));
         label.setHorizontalAlignment(JLabel.CENTER);

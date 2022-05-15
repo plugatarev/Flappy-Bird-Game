@@ -1,2 +1,4 @@
-package utils;public class Size {
+package utils;
+
+public class Size {
 }

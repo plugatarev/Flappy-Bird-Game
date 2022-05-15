@@ -1,2 +1,4 @@
-package utils;public class Records {
+package utils;
+
+public class Records {
 }

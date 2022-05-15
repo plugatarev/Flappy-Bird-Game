@@ -1,2 +1,4 @@
-package utils;public class Position {
+package utils;
+
+public class Position {
 }

@@ -1,2 +1,4 @@
-package utils;public class ViewField {
+package utils;
+
+public class ViewField {
 }

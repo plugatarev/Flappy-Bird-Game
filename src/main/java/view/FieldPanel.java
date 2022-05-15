@@ -65,7 +65,7 @@ public class FieldPanel extends JPanel {
 
     private void drawBarriers(Graphics g){
         Barrier b1 = field.getCurrentBarrier();
-        Barrier b2 = field.getNextBarrier();
+        Barrier b2 = field.getPrevBarrier();
         g.setColor(Color.CYAN);
         g.fillRect(b1.getCurrentPosition(), b1.getUpperY(), b1.getWidth(), 705 - b1.getUpperY());
         g.fillRect(b1.getCurrentPosition(), 0, b1.getWidth(), b1.getUpperY() - b1.getSpace());
