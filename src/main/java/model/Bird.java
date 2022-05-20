@@ -3,11 +3,11 @@ package model;
 public class Bird {
     private final int x;
     private int y;
-    private static final int WIDTH = 100;
-    private static final int HEIGHT = 100;
+    private static final int WIDTH = 90;
+    private static final int HEIGHT = 80;
     // CR: boolean
-    private static final int DOWN = 1;
-    private int direction = DOWN;
+    private static final boolean DOWN = true;
+    private boolean direction = DOWN;
 
     Bird(int startX, int startY){
         x = startX;
@@ -15,8 +15,13 @@ public class Bird {
     }
 
     public synchronized void move(){
-        if (direction == DOWN) y += direction;
-        else y += 2 * direction;
+        if (direction == DOWN){
+            y += 1;
+        }
+        else{
+            y -= 2;
+        }
+//        direction = DOWN;
     }
 
     public void reset(int startY){
@@ -32,26 +37,26 @@ public class Bird {
         return y;
     }
 
-    public int getWidth(){
+    public static int getWidth(){
         return WIDTH;
     }
 
-    public int getHeight(){
+    public static int getHeight(){
         return HEIGHT;
     }
 
     public synchronized void changeDirection(){
-        direction *= -1;
+        direction = !direction;
     }
 
     public boolean isTouchBarrier(Barrier b){
-        return ((x + WIDTH > b.getCurrentPosition() && x + WIDTH < b.getCurrentPosition() + b.getWidth() ||
-                (x > b.getCurrentPosition() && x < b.getCurrentPosition() + b.getWidth())) &&
-                (y + HEIGHT > b.getUpperY() || y < b.getUpperY() - b.getSpace()));
+        return ((x + WIDTH >= b.getCurrentPosition() && x + WIDTH <= b.getCurrentPosition() + Barrier.getWidth() ||
+                (x >= b.getCurrentPosition() && x <= b.getCurrentPosition() + Barrier.getWidth())) &&
+                (y + HEIGHT >= b.getUpperY() || y <= b.getUpperY() - Barrier.getSpace()));
     }
 
     // CR: move to const
     public boolean isTouchBorder(int height) {
-        return (y + HEIGHT > height - 95) || (y < 0);
+        return (y + HEIGHT >= height - Field.getGroundHeight()) || (y <= 0);
     }
 }

@@ -1,53 +1,46 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import utils.FieldModel;
+import utils.Position;
 
 public class Field{
     private final static int HEIGHT = 800;
     private final static int WIDTH = 800;
-    private final Bird bird = new Bird(WIDTH / 4, HEIGHT / 3 );
-    private Barrier curBarrier = new Barrier();
-    private Barrier prevBarrier = null;
-    private final List<Integer> scores = new ArrayList<>();
+    private static final int GROUND_HEIGHT = 95;
+    private final Bird bird;
+    private Barrier curBarrier;
+    private Barrier prevBarrier;
     private int currentScore;
 
-//    private static class FieldModel {
-//        private final Point birdPosition;
-//        private final Point barrierPosition;
-//        private final Point prevBarrierPositon;
-//        private final boolean isDownDirection;
-//    }
-//
-//    Field(FieldModel fieldModel) {
-//        Point birdPosition = fieldModel.birdPosition;
-//        bird = new Bird(birdPosition.x())
-//    }
+    public Field(){
+        bird = new Bird(WIDTH / 4, HEIGHT / 3 );
+        curBarrier = new Barrier();
+        prevBarrier = null;
+    }
+
+    public Field(FieldModel fieldModel) {
+        Position birdPosition = fieldModel.birdPosition();
+        bird = new Bird(birdPosition.x(), birdPosition.y());
+        curBarrier = new Barrier(fieldModel.barrierPosition().x(), fieldModel.barrierPosition().y());
+        prevBarrier = new Barrier(fieldModel.barrierPosition().x(), fieldModel.barrierPosition().y());
+
+    }
 
     public void update(){
         if (prevBarrier != null) {
             prevBarrier.moveBarrier();
         }
-        if (bird.getX() + bird.getWidth() >= curBarrier.getCurrentPosition() + curBarrier.getWidth() / 2) {
+        if (bird.getX() + Bird.getWidth() >= curBarrier.getCurrentPosition() + Barrier.getWidth() / 2) {
             prevBarrier = curBarrier;
             curBarrier = new Barrier();
             currentScore++;
         }
         curBarrier.moveBarrier();
         bird.move();
-        if (hasEnded()) {
-            addNewResult(currentScore);
-        }
     }
 
-    public int getCurrentScore(){
+    public synchronized int getCurrentScore(){
         return currentScore;
-    }
-
-    public List<Integer> getTableOfScores(){
-        scores.sort(Comparator.reverseOrder());
-        return scores;
     }
 
     public boolean hasEnded() {
@@ -62,11 +55,11 @@ public class Field{
         bird.reset(HEIGHT / 3);
     }
 
-    public int getHeight(){
+    public static int getHeight(){
         return HEIGHT;
     }
 
-    public int getWidth(){
+    public static int getWidth(){
         return WIDTH;
     }
 
@@ -82,8 +75,7 @@ public class Field{
         return prevBarrier;
     }
 
-    private void addNewResult(int score){
-        if (score != 0 && !scores.contains(score)) scores.add(score);
+    public static int getGroundHeight(){
+        return GROUND_HEIGHT;
     }
-
 }
