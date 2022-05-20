@@ -15,7 +15,7 @@ public class FlappyBirdController implements Runnable, PressListener, NewGameLis
 
     public FlappyBirdController(Field field) {
         this.field = field;
-        this.frame = new FlappyBirdFrame(this, this, field);
+        this.frame = new FlappyBirdFrame(this, this);
     }
 
     public void run() {

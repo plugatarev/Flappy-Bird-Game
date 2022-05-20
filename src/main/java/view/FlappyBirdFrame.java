@@ -16,7 +16,7 @@ public class FlappyBirdFrame extends JFrame {
     private FieldPanel fieldPanel;
     private final Records records = new Records();
 
-    public FlappyBirdFrame(NewGameListener newGameListener, PressListener listener, Field field){
+    public FlappyBirdFrame(NewGameListener newGameListener, PressListener listener){
         super(gc.getNAME());
         this.newGameListener = newGameListener;
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
