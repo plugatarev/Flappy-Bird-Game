@@ -1,6 +1,6 @@
 package view;
 
 @FunctionalInterface
-public interface TabListener {
+public interface PressListener {
     void changeDirection();
 }
