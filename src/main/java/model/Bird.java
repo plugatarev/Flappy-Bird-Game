@@ -5,7 +5,8 @@ public class Bird {
     private int y;
     private static final int WIDTH = 90;
     private static final int HEIGHT = 80;
-    // CR: boolean
+    private static final int BOTTOM_FIELD = Field.getHeight() - Field.getGroundHeight();
+    private static final int TOP_FIELD = 0;
     private static final boolean DOWN = true;
     private boolean direction = DOWN;
 
@@ -55,8 +56,7 @@ public class Bird {
                 (y + HEIGHT >= b.getUpperY() || y <= b.getUpperY() - Barrier.getSpace()));
     }
 
-    // CR: move to const
-    public boolean isTouchBorder(int height) {
-        return (y + HEIGHT >= height - Field.getGroundHeight()) || (y <= 0);
+    public boolean isTouchBorder() {
+        return (y + HEIGHT >= BOTTOM_FIELD) || (y <= TOP_FIELD);
     }
 }

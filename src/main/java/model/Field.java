@@ -44,7 +44,7 @@ public class Field{
     }
 
     public boolean hasEnded() {
-        return bird.isTouchBarrier(curBarrier) || bird.isTouchBorder(HEIGHT) ||
+        return bird.isTouchBarrier(curBarrier) || bird.isTouchBorder() ||
                 (prevBarrier != null && bird.isTouchBarrier(prevBarrier));
     }
 
