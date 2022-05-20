@@ -1,4 +1,2 @@
-package utils;
-
-public class Position {
+package utils;public record Position() {
 }
