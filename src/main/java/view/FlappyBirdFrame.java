@@ -1,37 +1,43 @@
 package view;
 
 import model.Field;
-import utils.Properties;
+import utils.GameConfig;
+import utils.Records;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.List;
 
 public class FlappyBirdFrame extends JFrame {
-    private static final String NAME = Properties.getProperty("name");
-    private static final String MENU = Properties.getProperty("menu");
-    private static final String NEW_GAME = Properties.getProperty("new_game");
-    private static final String EXIT = Properties.getProperty("exit");
-    private static final String HIGH_SCORES = Properties.getProperty("high_scores");
-    private static final String ABOUT = Properties.getProperty("about");
-    private static final String[] CHOOSE_OPTIONS = {NEW_GAME, HIGH_SCORES, EXIT};
-    private static final String END_GAME = Properties.getProperty("end_game");
+    private static final GameConfig gc = GameConfig.getInstance();
+    private static final String[] CHOOSE_OPTIONS = {gc.getNEW_GAME(), gc.getHIGH_SCORES(), gc.getEXIT()};
     private final NewGameListener newGameListener;
     private FieldPanel fieldPanel;
+    private final Records records = new Records();
 
-    public FlappyBirdFrame(NewGameListener newGameListener, TabListener listener, Field field){
-        super(NAME);
+    public FlappyBirdFrame(NewGameListener newGameListener, PressListener listener, Field field){
+        super(gc.getNAME());
         this.newGameListener = newGameListener;
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(null);
-        this.setPreferredSize(new Dimension(field.getWidth(), field.getHeight()));
+        this.setPreferredSize(new Dimension(Field.getWidth(), Field.getHeight()));
         setupMenu();
         createFieldPanel(listener);
         this.pack();
         this.setLocationRelativeTo(null);
         this.setVisible(true);
+        this.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent event) {
+                if (event.getKeyCode() == KeyEvent.VK_SPACE) listener.changeDirection();
+            }
+
+            @Override
+            public void keyPressed(KeyEvent event) {
+                if (event.getKeyCode() == KeyEvent.VK_SPACE) listener.changeDirection();
+            }
+        });
     }
 
     public void update(Field field) {
@@ -39,35 +45,44 @@ public class FlappyBirdFrame extends JFrame {
         fieldPanel.repaint();
     }
 
-    public void end() {
-        int result = JOptionPane.showOptionDialog(this, Properties.getProperty("choice"),
-                END_GAME,
+    private void showChoiceMenu(){
+        int result = JOptionPane.showOptionDialog(this, gc.getCHOICE(),
+                gc.getEND_GAME(),
                 JOptionPane.YES_NO_CANCEL_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
                 null,
                 CHOOSE_OPTIONS,
                 CHOOSE_OPTIONS[2]);
-        if (result == JOptionPane.CANCEL_OPTION) System.exit(0);
+        if (result == JOptionPane.CANCEL_OPTION) {
+            records.saveScores();
+            System.exit(0);
+        }
         if (result == JOptionPane.YES_OPTION) newGameListener.newGame();
         if (result == JOptionPane.NO_OPTION) {
             printHighScoresInformation();
-            end();
+            showChoiceMenu();
         }
     }
 
-    private void createFieldPanel(TabListener listener) {
+    public void end() {
+        String res = JOptionPane.showInputDialog(this, "Enter your name");
+        records.addNewScore(res, fieldPanel.field.getCurrentScore());
+        showChoiceMenu();
+    }
+
+    private void createFieldPanel(PressListener listener) {
         fieldPanel = new FieldPanel(listener);
         setContentPane(fieldPanel);
     }
 
     private void setupMenu() {
         JMenuBar menuBar = new JMenuBar();
-        JMenu menu = new JMenu(MENU);
+        JMenu menu = new JMenu(gc.getMENU());
 
-        JMenuItem aboutGameItem = new JMenuItem(ABOUT);
-        JMenuItem highScoresItem = new JMenuItem(HIGH_SCORES);
-        JMenuItem newGameItem = new JMenuItem(NEW_GAME);
-        JMenuItem exitItem = new JMenuItem(EXIT);
+        JMenuItem aboutGameItem = new JMenuItem(gc.getABOUT());
+        JMenuItem highScoresItem = new JMenuItem(gc.getHIGH_SCORES());
+        JMenuItem newGameItem = new JMenuItem(gc.getNEW_GAME());
+        JMenuItem exitItem = new JMenuItem(gc.getEXIT());
 
         newGameItem.addActionListener(event -> newGameListener.newGame());
         exitItem.addActionListener(event -> System.exit(0));
@@ -83,21 +98,17 @@ public class FlappyBirdFrame extends JFrame {
     }
 
     private void printHighScoresInformation() {
-        List<Integer> scores = fieldPanel.field.getTableOfScores();
-        StringBuilder table = new StringBuilder("<html>");
-        for (Integer score : scores){
-            table.append(score).append("<br>");
-        }
-        table.append("</html>");
-        // CR: without html?
-        JLabel label = new JLabel(table.toString());
-        label.setFont(new Font("Arial", Font.BOLD, 18));
-        label.setHorizontalAlignment(JLabel.CENTER);
-        JOptionPane.showMessageDialog(this, label, "High Score Table", JOptionPane.PLAIN_MESSAGE);
+        StringBuilder table = new StringBuilder();
+        records.createRecordTable(table);
+        JTextArea textArea = new JTextArea(String.valueOf(table));
+        textArea.setLineWrap(true);
+        textArea.setOpaque(false);
+        textArea.setFont(new Font("TimesRoman", Font.PLAIN, 30));
+        JOptionPane.showMessageDialog(this, textArea, "High Score Table", JOptionPane.PLAIN_MESSAGE);
     }
 
     private void printAboutInformation() {
-        String information = Properties.getProperty("about_information");
+        String information = gc.getABOUT_INFORMATION();
         JOptionPane.showMessageDialog(this, information);
     }
 }
