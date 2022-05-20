@@ -1,2 +1,3 @@
-package utils;public record Position() {
-}
+package utils;
+
+public record Position(int x, int y) {}
