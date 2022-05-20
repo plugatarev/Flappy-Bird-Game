@@ -3,14 +3,15 @@ package controller;
 import model.Field;
 import view.FlappyBirdFrame;
 import view.NewGameListener;
-import view.TabListener;
+import view.PressListener;
 
 import javax.swing.*;
 
-public class FlappyBirdController implements Runnable, TabListener, NewGameListener {
+public class FlappyBirdController implements Runnable, PressListener, NewGameListener {
     private final Field field;
     private final FlappyBirdFrame frame;
-    final Timer timer = new Timer(4, e -> this.handleTimer());
+    private final static int TIMER_DELAY = 4;
+    final Timer timer = new Timer(TIMER_DELAY, e -> this.handleTimer());
 
     public FlappyBirdController(Field field) {
         this.field = field;
