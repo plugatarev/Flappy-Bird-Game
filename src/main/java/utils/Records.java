@@ -5,14 +5,13 @@ import java.util.*;
 
 public class Records {
     private static final String RECORDS_FILE = "records";
-    private final Map<String, Integer> records;
-
-    public Records(Map<String, Integer> records){
-        this.records = records;
-//        loadScores();
-    }
-
+    private final List<Record> records;
     private static Records instance = null;
+
+
+    private Records(List<Record> records){
+        this.records = records;
+    }
 
     public static Records getInstance() {
         if (instance != null) return instance;
@@ -21,16 +20,16 @@ public class Records {
     }
 
     public static Records loadScores(){
-        Map<String, Integer> records = new HashMap<>();
+        List<Record> records = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(RECORDS_FILE))) {
             String line;
             while ((line = reader.readLine()) != null){
                 String[] tmp = line.split(" ");
-                records.put(tmp[0], Integer.valueOf(tmp[1]));
+                records.add(new Record(tmp[0], Integer.parseInt(tmp[1])));
             }
         } catch (IOException e) {
             // log
-            return new Records(new HashMap<>());
+            return new Records(new ArrayList<>());
         }
         return new Records(records);
     }
@@ -46,34 +45,40 @@ public class Records {
         }
     }
 
-    public Map.Entry<String, Integer> getMinScore(){
+    private void sortRecords(){
+        records.sort((o1, o2) -> {
+            if (o1.scores() == o2.scores()) return 0;
+            return o1.scores() < o2.scores() ? 1 : -1;
+        });
+    }
+
+
+    public Record getMinScore(){
         if (records.isEmpty()) return null;
-        return records.entrySet().stream().min(Comparator.comparingInt(Map.Entry::getValue)).get();
+        sortRecords();
+        return records.get(0);
     }
 
     public void createRecordTable(StringBuilder s){
-        records.entrySet()
-               .stream()
-               .sorted(Map.Entry.comparingByValue())
-                // Collectors.joining
-               .forEach(c -> s.append(c.getKey()).append(" ").append(c.getValue()).append("\n"));
-    }
+        sortRecords();
+        //Collectors.joining ?
+        records.forEach(c -> s.append(c.userName()).append(" ").append(c.scores()).append("\n"));}
 
     public void addNewScore(String name, int score){
         // score == 0 -> throw IllegalStateException
         if (score != 0) {
             if (records.isEmpty()){
-                records.put(name, score);
+                records.add(new Record(name, score));
                 return;
             }
-            Map.Entry<String, Integer> result = getMinScore();
+            Record result = getMinScore();
             if (records.size() < 10){
-                records.put(name, score);
+                records.add(new Record(name, score));
                 return;
             }
-            if (records.size() == 10 && score > result.getValue()){
-                records.remove(result.getKey());
-                records.put(name, score);
+            if (records.size() == 10 && score > result.scores()){
+                records.remove(9);
+                records.add(new Record(name, score));
             }
         }
     }
