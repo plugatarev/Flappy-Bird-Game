@@ -14,13 +14,12 @@ public class GameConfig {
     private final String BIRD_IMAGE;
     private final String BACKGROUND_IMAGE;
     private final String CHOICE;
-    private final String RECORDS_FILE;
 
     private static GameConfig gameConfig;
 
     private GameConfig(String name, String menu, String newGame, String exit, String highScores, String about,
                        String aboutInformation, String endGame, String birdImage, String backgroundImage,
-                       String choice, String recordsFile)  {
+                       String choice)  {
         NAME = name;
         MENU = menu;
         NEW_GAME = newGame;
@@ -32,7 +31,6 @@ public class GameConfig {
         BIRD_IMAGE = birdImage;
         BACKGROUND_IMAGE = backgroundImage;
         CHOICE = choice;
-        RECORDS_FILE = recordsFile;
     }
 
     public static GameConfig getInstance() {
@@ -52,7 +50,7 @@ public class GameConfig {
                     property.getProperty("exit"), property.getProperty("high_scores"), property.getProperty("about"),
                     property.getProperty("about_information"), property.getProperty("end_game"),
                     property.getProperty("bird_image"), property.getProperty("background_image"),
-                    property.getProperty("choice"), property.getProperty("recordsFile"));
+                    property.getProperty("choice"));
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
@@ -96,10 +94,6 @@ public class GameConfig {
 
     public String getCHOICE() {
         return CHOICE;
-    }
-
-    public String getRECORDS_FILE() {
-        return RECORDS_FILE;
     }
 
     public String getABOUT_INFORMATION() {
