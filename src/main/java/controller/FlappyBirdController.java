@@ -1,6 +1,7 @@
 package controller;
 
 import model.Field;
+import utils.GameObjects;
 import view.FlappyBirdFrame;
 import view.NewGameListener;
 import view.PressListener;
@@ -19,7 +20,7 @@ public class FlappyBirdController implements Runnable, PressListener, NewGameLis
     }
 
     public void run() {
-        frame.update(field);
+        frame.update(GameObjects.getGameObjects(field));
     }
 
     @Override
@@ -35,7 +36,7 @@ public class FlappyBirdController implements Runnable, PressListener, NewGameLis
 
     public void handleTimer() {
         field.update();
-        frame.update(field);
+        frame.update(GameObjects.getGameObjects(field));
         frame.repaint();
         if (field.hasEnded()) {
             timer.stop();
