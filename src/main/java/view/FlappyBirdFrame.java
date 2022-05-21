@@ -2,47 +2,49 @@ package view;
 
 import model.Field;
 import utils.GameConfig;
+import utils.GameObjects;
 import utils.Records;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class FlappyBirdFrame extends JFrame {
     private static final GameConfig gc = GameConfig.getInstance();
     private static final String[] CHOOSE_OPTIONS = {gc.getNEW_GAME(), gc.getHIGH_SCORES(), gc.getEXIT()};
     private final NewGameListener newGameListener;
     private FieldPanel fieldPanel;
-    private final Records records = new Records();
+    private final Records records = Records.
+            getInstance();
 
     public FlappyBirdFrame(NewGameListener newGameListener, PressListener listener){
         super(gc.getNAME());
         this.newGameListener = newGameListener;
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        addReactionWindowClosing();
         this.setLayout(null);
         this.setPreferredSize(new Dimension(Field.getWidth(), Field.getHeight()));
         setupMenu();
         createFieldPanel(listener);
         this.pack();
         this.setLocationRelativeTo(null);
+        fieldPanel.setFocusable(true);
         this.setVisible(true);
-        this.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent event) {
-                if (event.getKeyCode() == KeyEvent.VK_SPACE) listener.changeDirection();
-            }
-
-            @Override
-            public void keyPressed(KeyEvent event) {
-                if (event.getKeyCode() == KeyEvent.VK_SPACE) listener.changeDirection();
-            }
-        });
     }
 
-    public void update(Field field) {
+    public void update(GameObjects field) {
         fieldPanel.setField(field);
         fieldPanel.repaint();
+    }
+
+    private void addReactionWindowClosing(){
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                records.saveScores();
+                System.exit(0);
+            }
+        });
     }
 
     private void showChoiceMenu(){
@@ -54,7 +56,7 @@ public class FlappyBirdFrame extends JFrame {
                 CHOOSE_OPTIONS,
                 CHOOSE_OPTIONS[2]);
         if (result == JOptionPane.CANCEL_OPTION) {
-            // CR: save on close window
+            //OK CR: save on close window
             records.saveScores();
             System.exit(0);
         }
@@ -66,9 +68,25 @@ public class FlappyBirdFrame extends JFrame {
     }
 
     public void end() {
-        String res = JOptionPane.showInputDialog(this, "Enter your name");
-        records.addNewScore(res, fieldPanel.field.getCurrentScore());
+        int score = fieldPanel.field.currentScore();
+        if (score > 0) {
+            String res;
+            do{
+                res = JOptionPane.showInputDialog(this, "Enter your name");
+            }while(!isCorrect(res));
+            records.addNewScore(res, score);
+        }
         showChoiceMenu();
+    }
+
+    private boolean isCorrect(String res){
+        if (res.length() == 0) return false;
+        int i = 0;
+        while (i < res.length()){
+            if (res.charAt(i) == ' ') return false;
+            i++;
+        }
+        return true;
     }
 
     private void createFieldPanel(PressListener listener) {
