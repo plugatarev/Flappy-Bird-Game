@@ -13,7 +13,8 @@ public class Barrier {
         currentPosition = 750;
     }
 
-    Barrier(int currentPosition, int upperY){
+    Barrier(int currentPosition, Integer upperY){
+        if (upperY == null) upperY = new Random().nextInt(500) + 200;
         this.upperY = upperY;
         this.currentPosition = currentPosition;
     }

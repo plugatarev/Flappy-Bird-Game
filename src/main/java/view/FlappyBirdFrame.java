@@ -54,6 +54,7 @@ public class FlappyBirdFrame extends JFrame {
                 CHOOSE_OPTIONS,
                 CHOOSE_OPTIONS[2]);
         if (result == JOptionPane.CANCEL_OPTION) {
+            // CR: save on close window
             records.saveScores();
             System.exit(0);
         }

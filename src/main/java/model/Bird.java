@@ -1,8 +1,9 @@
 package model;
 
+import java.awt.geom.Point2D;
+
 public class Bird {
-    private final int x;
-    private int y;
+    Point2D coords;
     private static final int WIDTH = 90;
     private static final int HEIGHT = 80;
     private static final int BOTTOM_FIELD = Field.getHeight() - Field.getGroundHeight();
@@ -30,13 +31,7 @@ public class Bird {
         y = startY;
     }
 
-    public int getX(){
-        return x;
-    }
 
-    public int getY(){
-        return y;
-    }
 
     public static int getWidth(){
         return WIDTH;

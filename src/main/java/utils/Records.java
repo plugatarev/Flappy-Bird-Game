@@ -4,30 +4,42 @@ import java.io.*;
 import java.util.*;
 
 public class Records {
-    public final static String fileName = GameConfig.getInstance().getRECORDS_FILE();
-    private final Map<String, Integer> records = new HashMap<>();
+    private static final String RECORDS_FILE = "records";
+    private final Map<String, Integer> records;
 
-    public Records(){
-        loadScores();
+    public Records(Map<String, Integer> records){
+        this.records = records;
+//        loadScores();
     }
 
-    public void loadScores(){
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+    private static Records instance = null;
+
+    public static Records getInstance() {
+        if (instance != null) return instance;
+        instance = loadScores();
+        return instance;
+    }
+
+    public static Records loadScores(){
+        Map<String, Integer> records = new HashMap<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(RECORDS_FILE))) {
             String line;
             while ((line = reader.readLine()) != null){
                 String[] tmp = line.split(" ");
                 records.put(tmp[0], Integer.valueOf(tmp[1]));
             }
         } catch (IOException e) {
-            System.err.println(e.getMessage());
+            // log
+            return new Records(new HashMap<>());
         }
+        return new Records(records);
     }
 
     public void saveScores(){
         StringBuilder table = new StringBuilder();
         createRecordTable(table);
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))){
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(RECORDS_FILE))){
             writer.write(table.toString());
         } catch (IOException e){
             System.err.println(e.getMessage());
@@ -43,10 +55,12 @@ public class Records {
         records.entrySet()
                .stream()
                .sorted(Map.Entry.comparingByValue())
+                // Collectors.joining
                .forEach(c -> s.append(c.getKey()).append(" ").append(c.getValue()).append("\n"));
     }
 
     public void addNewScore(String name, int score){
+        // score == 0 -> throw IllegalStateException
         if (score != 0) {
             if (records.isEmpty()){
                 records.put(name, score);

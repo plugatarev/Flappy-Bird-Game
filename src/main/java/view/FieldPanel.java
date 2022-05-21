@@ -10,6 +10,12 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class FieldPanel extends JPanel {
+    /*
+        c   c
+
+        c   c
+    b   c   c
+     */
     Field field;
     private static final int SCREEN_CENTER = Field.getWidth() / 3 + 85;
     private static final int FONT_SIZE = 100;
