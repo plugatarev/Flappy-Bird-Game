@@ -29,18 +29,6 @@ public class FieldPanel extends JPanel {
                 if (event.getKeyCode() == KeyEvent.VK_SPACE) listener.changeDirection();
             }
         });
-        this.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent event) {
-                listener.changeDirection();
-            }
-
-            @Override
-            public void mousePressed(MouseEvent event) {
-                listener.changeDirection();
-            }
-        });
-
     }
 
     void setField(GameObjects field){

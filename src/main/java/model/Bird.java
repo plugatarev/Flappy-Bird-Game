@@ -9,24 +9,31 @@ public class Bird {
     private static final int TOP_FIELD = 0;
     private static final boolean DOWN = true;
     private boolean direction = DOWN;
-    private int count = 0;
+    private int upTime = 0;
+
     Bird(int startX, int startY){
         x = startX;
         y = startY;
     }
 
     public synchronized void move(){
-        if (direction == DOWN){
-            y += 1;
-        }
-        else{
-            y -= 2;
-            count++;
-        }
-        if (count == 30){
-            count = 0;
+        if (direction == DOWN) moveDown();
+        else moveUp();
+    }
+
+    private void moveDown(){ y += 1; }
+
+    private void moveUp(){
+        y -= 2;
+        upTime++;
+        if (upTime == 30){
+            upTime = 0;
             direction = DOWN;
         }
+    }
+
+    public synchronized void changeDirection(){
+        direction = !direction;
     }
 
     public void reset(int startY){
@@ -48,10 +55,6 @@ public class Bird {
 
     public static int getHeight(){
         return HEIGHT;
-    }
-
-    public synchronized void changeDirection(){
-        direction = !direction;
     }
 
     public boolean isTouchBarrier(Barrier b){

@@ -7,23 +7,25 @@ public class Field{
     private final static int HEIGHT = 800;
     private final static int WIDTH = 800;
     private static final int GROUND_HEIGHT = 95;
-    private final Bird bird;
+    private Bird bird;
     private Barrier curBarrier;
     private Barrier prevBarrier;
     private int currentScore;
 
-    public Field(){
+    public Field(FieldModel fieldModel) {
+        if (fieldModel == null) setDefaultSettings();
+        else{
+            Position birdPosition = fieldModel.birdPosition();
+            bird = new Bird(birdPosition.x(), birdPosition.y());
+            curBarrier = new Barrier(fieldModel.barrierPosition().x(), fieldModel.barrierPosition().y());
+            prevBarrier = new Barrier(fieldModel.barrierPosition().x(), fieldModel.barrierPosition().y());
+        }
+    }
+
+    private void setDefaultSettings() {
         bird = new Bird(WIDTH / 4, HEIGHT / 3 );
         curBarrier = new Barrier();
         prevBarrier = null;
-    }
-
-    public Field(FieldModel fieldModel) {
-        Position birdPosition = fieldModel.birdPosition();
-        bird = new Bird(birdPosition.x(), birdPosition.y());
-        curBarrier = new Barrier(fieldModel.barrierPosition().x(), fieldModel.barrierPosition().y());
-        prevBarrier = new Barrier(fieldModel.barrierPosition().x(), fieldModel.barrierPosition().y());
-
     }
 
     public void update(){

@@ -117,8 +117,7 @@ public class FlappyBirdFrame extends JFrame {
     }
 
     private void printHighScoresInformation() {
-        StringBuilder table = new StringBuilder();
-        records.createRecordTable(table);
+        String table = records.createRecordTable();
         JTextArea textArea = new JTextArea(String.valueOf(table));
         textArea.setLineWrap(true);
         textArea.setOpaque(false);

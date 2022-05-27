@@ -2,6 +2,7 @@ package utils;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Records {
     private static final String RECORDS_FILE = "records";
@@ -28,20 +29,18 @@ public class Records {
                 records.add(new Record(tmp[0], Integer.parseInt(tmp[1])));
             }
         } catch (IOException e) {
-            // log
+            System.out.println("Couldn't load old records");
             return new Records(new ArrayList<>());
         }
         return new Records(records);
     }
 
     public void saveScores(){
-        StringBuilder table = new StringBuilder();
-        createRecordTable(table);
-
+        String table = createRecordTable();
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(RECORDS_FILE))){
-            writer.write(table.toString());
+            writer.write(table);
         } catch (IOException e){
-            System.err.println(e.getMessage());
+            throw new RuntimeException("Failed to save the records");
         }
     }
 
@@ -56,30 +55,32 @@ public class Records {
     public Record getMinScore(){
         if (records.isEmpty()) return null;
         sortRecords();
-        return records.get(0);
+        return records.get(records.size() - 1);
     }
 
-    public void createRecordTable(StringBuilder s){
+    public String createRecordTable() {
         sortRecords();
-        //Collectors.joining ?
-        records.forEach(c -> s.append(c.userName()).append(" ").append(c.scores()).append("\n"));}
+        return records.stream().map(Record::toString).collect(Collectors.joining("\n"));
+    }
+
+    public boolean isFull(){
+        return records.size() == 10;
+    }
 
     public void addNewScore(String name, int score){
-        // score == 0 -> throw IllegalStateException
-        if (score != 0) {
-            if (records.isEmpty()){
-                records.add(new Record(name, score));
-                return;
-            }
-            Record result = getMinScore();
-            if (records.size() < 10){
-                records.add(new Record(name, score));
-                return;
-            }
-            if (records.size() == 10 && score > result.scores()){
-                records.remove(9);
-                records.add(new Record(name, score));
-            }
+        if (score == 0) throw new IllegalStateException("Zero result cannot be added to the record table");
+        if (records.isEmpty()){
+            records.add(new Record(name, score));
+            return;
+        }
+        Record result = getMinScore();
+        if (!isFull()){
+            records.add(new Record(name, score));
+            return;
+        }
+        if (isFull() && score > result.scores()){
+            records.remove(9);
+            records.add(new Record(name, score));
         }
     }
 }

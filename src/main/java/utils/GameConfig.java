@@ -1,6 +1,7 @@
 package utils;
 
 import java.io.*;
+import java.util.Properties;
 
 public class GameConfig {
     private final String NAME;
@@ -42,7 +43,7 @@ public class GameConfig {
     }
 
     private static GameConfig loadConfig() {
-        java.util.Properties property = new java.util.Properties();
+        Properties property = new Properties();
         try (FileInputStream file = new FileInputStream("src/main/resources/game.properties")) {
             property.load(file);
             return new GameConfig(
