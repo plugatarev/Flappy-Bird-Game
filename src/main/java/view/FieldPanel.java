@@ -1,8 +1,5 @@
 package view;
 
-import model.Barrier;
-import model.Bird;
-import model.Field;
 import utils.GameConfig;
 import utils.GameObjects;
 import utils.Position;

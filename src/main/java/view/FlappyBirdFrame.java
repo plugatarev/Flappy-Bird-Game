@@ -1,6 +1,5 @@
 package view;
 
-import model.Field;
 import utils.GameConfig;
 import utils.GameObjects;
 import utils.Records;
