@@ -10,10 +10,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ModelTest {
     private static final int birdPositionX = Field.getWidth() / 4;
 
-    private boolean isPassBarrier(Barrier b){
-        return birdPositionX > b.getCurrentPosition() + Barrier.getWidth();
-    }
-
     @Test
     public void BorderCrash() {
         int birdPosition = Field.getHeight() - Field.getGroundHeight();
@@ -51,6 +47,7 @@ public class ModelTest {
                 new Position(birdPositionX + Bird.getWidth(), upperY),null, true));
         assertTrue(field.hasEnded());
     }
+
     @Test
     public void InsideBarrierCrash(){
         int birdPosition = Field.getHeight() / 3;
@@ -63,6 +60,7 @@ public class ModelTest {
                 new Position(birdPositionX + Bird.getWidth() / 2, upperY),null, true));
         assertTrue(field.hasEnded());
     }
+
     @Test
     public void SuccessfulPassageBarrier(){
         int birdPosition = Field.getHeight() / 3;
@@ -83,5 +81,9 @@ public class ModelTest {
         }
         assertFalse(field.hasEnded());
         assertEquals(field.getCurrentScore(), 1);
+    }
+
+    private boolean isPassBarrier(Barrier b){
+        return birdPositionX > b.getCurrentPosition() + Barrier.getWidth();
     }
 }

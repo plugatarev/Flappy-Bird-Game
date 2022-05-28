@@ -67,12 +67,17 @@ public class Records {
         return records.size() == 10;
     }
 
+    private boolean isContainsRecord(String name, int score){
+        return records.stream().anyMatch(c -> c.scores() == score && c.userName().equals(name));
+    }
+
     public void addNewScore(String name, int score){
         if (score == 0) throw new IllegalStateException("Zero result cannot be added to the record table");
         if (records.isEmpty()){
             records.add(new Record(name, score));
             return;
         }
+        if (isContainsRecord(name, score)) return;
         Record result = getMinScore();
         if (!isFull()){
             records.add(new Record(name, score));
