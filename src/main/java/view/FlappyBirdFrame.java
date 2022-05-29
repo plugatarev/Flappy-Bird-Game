@@ -10,21 +10,20 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class FlappyBirdFrame extends JFrame {
+    private FieldPanel fieldPanel;
     private static final GameConfig gc = GameConfig.getInstance();
     private static final String[] CHOOSE_OPTIONS = {gc.getNEW_GAME(), gc.getHIGH_SCORES(), gc.getEXIT()};
     private final NewGameListener newGameListener;
-    private FieldPanel fieldPanel;
-    private final Records records = Records.
-            getInstance();
+    private final Records records = Records.getInstance();
 
-    public FlappyBirdFrame(NewGameListener newGameListener, PressListener listener){
+    public FlappyBirdFrame(NewGameListener newGameListener, PressListener listener, GameObjects field){
         super(gc.getNAME());
         this.newGameListener = newGameListener;
+        createFieldPanel(listener, field);
         addReactionWindowClosing();
         this.setLayout(null);
-        this.setPreferredSize(new Dimension(Field.getWidth(), Field.getHeight()));
+        this.setPreferredSize(new Dimension(field.fieldSize().width(), field.fieldSize().height()));
         setupMenu();
-        createFieldPanel(listener);
         this.pack();
         this.setLocationRelativeTo(null);
         fieldPanel.setFocusable(true);
@@ -88,8 +87,8 @@ public class FlappyBirdFrame extends JFrame {
         return true;
     }
 
-    private void createFieldPanel(PressListener listener) {
-        fieldPanel = new FieldPanel(listener);
+    private void createFieldPanel(PressListener listener, GameObjects field) {
+        fieldPanel = new FieldPanel(listener, field);
         setContentPane(fieldPanel);
     }
 

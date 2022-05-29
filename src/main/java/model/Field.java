@@ -1,40 +1,40 @@
 package model;
 
 import utils.FieldModel;
+import utils.GameObjects;
 import utils.Position;
+import utils.Size;
 
 public class Field{
-    private final static int HEIGHT = 800;
-    private final static int WIDTH = 800;
-    private static final int GROUND_HEIGHT = 95;
-    private Bird bird;
+    private final int TOP_FIELD;
+    private final int BOTTOM_FIELD;
+    private final int HEIGHT;
+    private final int WIDTH;
+    private final Bird bird;
     private Barrier curBarrier;
     private Barrier prevBarrier;
     private int currentScore;
 
-    public Field(FieldModel fieldModel) {
-        if (fieldModel == null) setDefaultSettings();
-        else{
-            Position birdPosition = fieldModel.birdPosition();
-            bird = new Bird(birdPosition.x(), birdPosition.y());
-            curBarrier = new Barrier(fieldModel.barrierPosition().x(), fieldModel.barrierPosition().y());
-            prevBarrier = new Barrier(fieldModel.barrierPosition().x(), fieldModel.barrierPosition().y());
-        }
-    }
-
-    private void setDefaultSettings() {
-        bird = new Bird(WIDTH / 4, HEIGHT / 3 );
-        curBarrier = new Barrier();
-        prevBarrier = null;
+    public Field(GameObjects settings) {
+        HEIGHT = settings.fieldSize().height();
+        WIDTH = settings.fieldSize().width();
+        int GROUND_HEIGHT = HEIGHT / 8 - 5;
+        TOP_FIELD = 0;
+        BOTTOM_FIELD = HEIGHT - GROUND_HEIGHT;
+        Position birdPosition = settings.birdPosition();
+        bird = new Bird(birdPosition.x(), birdPosition.y(), settings.birdSize());
+        curBarrier = new Barrier(settings.barrierPosition(), settings.barrierSize());
+        prevBarrier = settings.prevBarrierPosition() == null ?
+                null : new Barrier(settings.prevBarrierPosition(), settings.barrierSize());
     }
 
     public void update(){
         if (prevBarrier != null) {
             prevBarrier.moveBarrier();
         }
-        if (bird.getX() + Bird.getWidth() >= curBarrier.getCurrentPosition() + Barrier.getWidth() / 2) {
+        if (bird.getX() + bird.getWidth() >= curBarrier.getCurrentPosition() + curBarrier.getWidth() / 2) {
             prevBarrier = curBarrier;
-            curBarrier = new Barrier();
+            curBarrier = new Barrier(new Position(WIDTH - 50, null), new Size(prevBarrier.getSpace(), prevBarrier.getWidth()));
             currentScore++;
         }
         curBarrier.moveBarrier();
@@ -46,23 +46,24 @@ public class Field{
     }
 
     public boolean hasEnded() {
-        return bird.isTouchBarrier(curBarrier) || bird.isTouchBorder() ||
-                (prevBarrier != null && bird.isTouchBarrier(prevBarrier));
+        return birdTouchBarrier(curBarrier) || birdTouchBorder() ||
+                (prevBarrier != null && birdTouchBarrier(prevBarrier));
     }
 
     public void clear(){
-        curBarrier = new Barrier();
+        curBarrier = new Barrier(new Position(WIDTH - 50, null), new Size(curBarrier.getSpace(), curBarrier.getWidth()));
         prevBarrier = null;
         currentScore = 0;
         bird.reset(HEIGHT / 3);
     }
 
-    public static int getHeight(){
-        return HEIGHT;
-    }
-
-    public static int getWidth(){
-        return WIDTH;
+    public GameObjects getGameObjects(){
+        Position birdPosition = new Position(bird.getX(), bird.getY());
+        Position barrierPosition = new Position(curBarrier.getCurrentPosition(), curBarrier.getUpperY());
+        Position prevBarrierPosition = prevBarrier == null ? null : new Position(prevBarrier.getCurrentPosition(), prevBarrier.getUpperY());
+        return new GameObjects(new Size(HEIGHT, WIDTH), new Size(bird.getHeight(), bird.getWidth()),
+                new Size(curBarrier.getSpace(), curBarrier.getWidth()),
+                birdPosition, barrierPosition, prevBarrierPosition, getCurrentScore());
     }
 
     public Bird getBird(){
@@ -77,7 +78,13 @@ public class Field{
         return prevBarrier;
     }
 
-    public static int getGroundHeight(){
-        return GROUND_HEIGHT;
+    public boolean birdTouchBarrier(Barrier b){
+        return ((bird.getX() + bird.getWidth() >= b.getCurrentPosition() && bird.getX() + bird.getWidth() <= b.getCurrentPosition() + curBarrier.getWidth() ||
+                (bird.getX() >= b.getCurrentPosition() && bird.getX() <= b.getCurrentPosition() + curBarrier.getWidth())) &&
+                (bird.getY() + bird.getHeight() >= b.getUpperY() || bird.getY() <= b.getUpperY() - curBarrier.getSpace()));
+    }
+
+    public boolean birdTouchBorder() {
+        return (bird.getY() + bird.getHeight() >= BOTTOM_FIELD) || (bird.getY() <= TOP_FIELD);
     }
 }

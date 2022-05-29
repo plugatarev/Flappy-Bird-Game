@@ -14,13 +14,13 @@ public class FlappyBirdController implements Runnable, PressListener, NewGameLis
     private final static int TIMER_DELAY = 4;
     final Timer timer = new Timer(TIMER_DELAY, e -> this.handleTimer());
 
-    public FlappyBirdController(Field field) {
+    public FlappyBirdController(Field field, GameObjects settings) {
         this.field = field;
-        this.frame = new FlappyBirdFrame(this, this);
+        this.frame = new FlappyBirdFrame(this, this, settings);
     }
 
     public void run() {
-        frame.update(GameObjects.getGameObjects(field));
+        frame.update(field.getGameObjects());
     }
 
     @Override
@@ -36,7 +36,7 @@ public class FlappyBirdController implements Runnable, PressListener, NewGameLis
 
     public void handleTimer() {
         field.update();
-        frame.update(GameObjects.getGameObjects(field));
+        frame.update(field.getGameObjects());
         frame.repaint();
         if (field.hasEnded()) {
             timer.stop();
