@@ -1,6 +1,5 @@
 package model;
 
-import utils.FieldModel;
 import utils.GameObjects;
 import utils.Position;
 import utils.Size;
@@ -18,9 +17,8 @@ public class Field{
     public Field(GameObjects settings) {
         HEIGHT = settings.fieldSize().height();
         WIDTH = settings.fieldSize().width();
-        int GROUND_HEIGHT = HEIGHT / 8 - 5;
         TOP_FIELD = 0;
-        BOTTOM_FIELD = HEIGHT - GROUND_HEIGHT;
+        BOTTOM_FIELD = HEIGHT - settings.groundHeight();
         Position birdPosition = settings.birdPosition();
         bird = new Bird(birdPosition.x(), birdPosition.y(), settings.birdSize());
         curBarrier = new Barrier(settings.barrierPosition(), settings.barrierSize());
@@ -63,19 +61,11 @@ public class Field{
         Position prevBarrierPosition = prevBarrier == null ? null : new Position(prevBarrier.getCurrentPosition(), prevBarrier.getUpperY());
         return new GameObjects(new Size(HEIGHT, WIDTH), new Size(bird.getHeight(), bird.getWidth()),
                 new Size(curBarrier.getSpace(), curBarrier.getWidth()),
-                birdPosition, barrierPosition, prevBarrierPosition, getCurrentScore());
+                birdPosition, barrierPosition, prevBarrierPosition, getCurrentScore(), HEIGHT - BOTTOM_FIELD);
     }
 
-    public Bird getBird(){
-        return bird;
-    }
-
-    public Barrier getCurrentBarrier(){
-        return curBarrier;
-    }
-
-    public Barrier getPrevBarrier(){
-        return prevBarrier;
+    public void changeBirdDirection(){
+        bird.changeDirection();
     }
 
     public boolean birdTouchBarrier(Barrier b){

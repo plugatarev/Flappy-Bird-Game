@@ -1,7 +1,6 @@
 package controller;
 
 import model.Field;
-import utils.GameObjects;
 import view.FlappyBirdFrame;
 import view.NewGameListener;
 import view.PressListener;
@@ -14,9 +13,9 @@ public class FlappyBirdController implements Runnable, PressListener, NewGameLis
     private final static int TIMER_DELAY = 4;
     final Timer timer = new Timer(TIMER_DELAY, e -> this.handleTimer());
 
-    public FlappyBirdController(Field field, GameObjects settings) {
+    public FlappyBirdController(Field field) {
         this.field = field;
-        this.frame = new FlappyBirdFrame(this, this, settings);
+        this.frame = new FlappyBirdFrame(this, this, field.getGameObjects());
     }
 
     public void run() {
@@ -31,7 +30,7 @@ public class FlappyBirdController implements Runnable, PressListener, NewGameLis
 
     @Override
     public void changeDirection() {
-        field.getBird().changeDirection();
+        field.changeBirdDirection();
     }
 
     public void handleTimer() {

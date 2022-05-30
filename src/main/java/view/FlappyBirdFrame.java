@@ -11,13 +11,12 @@ import java.awt.event.WindowEvent;
 
 public class FlappyBirdFrame extends JFrame {
     private FieldPanel fieldPanel;
-    private static final GameConfig gc = GameConfig.getInstance();
-    private static final String[] CHOOSE_OPTIONS = {gc.getNEW_GAME(), gc.getHIGH_SCORES(), gc.getEXIT()};
+    private final String[] CHOOSE_OPTIONS = {GameConfig.getConfig("newGame"), GameConfig.getConfig("highScores"), GameConfig.getConfig("exit")};
     private final NewGameListener newGameListener;
     private final Records records = Records.getInstance();
 
     public FlappyBirdFrame(NewGameListener newGameListener, PressListener listener, GameObjects field){
-        super(gc.getNAME());
+        super(GameConfig.getConfig("name"));
         this.newGameListener = newGameListener;
         createFieldPanel(listener, field);
         addReactionWindowClosing();
@@ -46,15 +45,14 @@ public class FlappyBirdFrame extends JFrame {
     }
 
     private void showChoiceMenu(){
-        int result = JOptionPane.showOptionDialog(this, gc.getCHOICE(),
-                gc.getEND_GAME(),
+        int result = JOptionPane.showOptionDialog(this, GameConfig.getConfig("choice"),
+                GameConfig.getConfig("end"),
                 JOptionPane.YES_NO_CANCEL_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
                 null,
                 CHOOSE_OPTIONS,
                 CHOOSE_OPTIONS[2]);
         if (result == JOptionPane.CANCEL_OPTION) {
-            //OK CR: save on close window
             records.saveScores();
             System.exit(0);
         }
@@ -71,20 +69,9 @@ public class FlappyBirdFrame extends JFrame {
             String res;
             do{
                 res = JOptionPane.showInputDialog(this, "Enter your name");
-            }while(!isCorrect(res));
-            records.addNewScore(res, score);
+            }while(!records.addNewRecord(res, score));
         }
         showChoiceMenu();
-    }
-
-    private boolean isCorrect(String res){
-        if (res.length() == 0) return false;
-        int i = 0;
-        while (i < res.length()){
-            if (res.charAt(i) == ' ') return false;
-            i++;
-        }
-        return true;
     }
 
     private void createFieldPanel(PressListener listener, GameObjects field) {
@@ -94,12 +81,12 @@ public class FlappyBirdFrame extends JFrame {
 
     private void setupMenu() {
         JMenuBar menuBar = new JMenuBar();
-        JMenu menu = new JMenu(gc.getMENU());
+        JMenu menu = new JMenu(GameConfig.getConfig("menu"));
 
-        JMenuItem aboutGameItem = new JMenuItem(gc.getABOUT());
-        JMenuItem highScoresItem = new JMenuItem(gc.getHIGH_SCORES());
-        JMenuItem newGameItem = new JMenuItem(gc.getNEW_GAME());
-        JMenuItem exitItem = new JMenuItem(gc.getEXIT());
+        JMenuItem aboutGameItem = new JMenuItem(GameConfig.getConfig("about"));
+        JMenuItem highScoresItem = new JMenuItem(GameConfig.getConfig("highScores"));
+        JMenuItem newGameItem = new JMenuItem(GameConfig.getConfig("newGame"));
+        JMenuItem exitItem = new JMenuItem(GameConfig.getConfig("exit"));
 
         newGameItem.addActionListener(event -> newGameListener.newGame());
         exitItem.addActionListener(event -> System.exit(0));
@@ -124,7 +111,7 @@ public class FlappyBirdFrame extends JFrame {
     }
 
     private void printAboutInformation() {
-        String information = gc.getABOUT_INFORMATION();
+        String information = GameConfig.getConfig("gameRules");
         JOptionPane.showMessageDialog(this, information);
     }
 }

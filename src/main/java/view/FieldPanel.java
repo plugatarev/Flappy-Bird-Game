@@ -13,7 +13,6 @@ public class FieldPanel extends JPanel {
     private final int SCREEN_CENTER;
     private static final int FONT_SIZE = 100;
     private static final int SCREEN_HEIGHT = 705;
-    private static final GameConfig gc = GameConfig.getInstance();
     FieldPanel(PressListener listener, GameObjects field){
         this.field = field;
         SCREEN_CENTER = field.fieldSize().width() / 3 + 85;
@@ -50,7 +49,7 @@ public class FieldPanel extends JPanel {
     }
 
     private void drawBird(Graphics g){
-        Image birdImage = new ImageIcon(gc.getBIRD_IMAGE()).getImage();
+        Image birdImage = new ImageIcon(GameConfig.getConfig("birdImage")).getImage();
         g.drawImage(birdImage, field.birdPosition().x(), field.birdPosition().y(), field.birdSize().width(), field.birdSize().height(), null);
     }
 
@@ -67,7 +66,7 @@ public class FieldPanel extends JPanel {
     }
 
     private void drawBackground(Graphics g){
-        Image backgroundImage = new ImageIcon(gc.getBACKGROUND_IMAGE()).getImage();
+        Image backgroundImage = new ImageIcon(GameConfig.getConfig("backgroundImage")).getImage();
         g.drawImage(backgroundImage, 0, 0, this);
     }
 }

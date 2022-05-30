@@ -6,13 +6,14 @@ import java.io.UncheckedIOException;
 import java.util.Properties;
 
 public record GameObjects(Size fieldSize, Size birdSize, Size barrierSize, Position birdPosition,
-                          Position barrierPosition, Position prevBarrierPosition, Integer currentScore) {
+                          Position barrierPosition, Position prevBarrierPosition, Integer currentScore,
+                          Integer groundHeight) {
 
     private static Integer getValue(Properties p, String s){
         return Integer.parseInt(p.getProperty(s));
     }
 
-    public static GameObjects loadDefaultGameObjects(){
+    public static GameObjects defaultGameObjects(){
         Properties property = new Properties();
         try (FileInputStream file = new FileInputStream("src/main/resources/DefaultSettings.properties")) {
             property.load(file);
@@ -22,7 +23,7 @@ public record GameObjects(Size fieldSize, Size birdSize, Size barrierSize, Posit
                                    new Position(getValue(property, "bird_x"), getValue(property, "bird_y")),
                                    new Position(getValue(property, "barrier_position"), null),
                                    null,
-                                   getValue(property, "score"));
+                                   getValue(property, "score"), getValue(property, "ground_height"));
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
