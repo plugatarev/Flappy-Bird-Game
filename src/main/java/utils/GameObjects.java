@@ -13,7 +13,7 @@ public record GameObjects(Size fieldSize, Size birdSize, Size barrierSize, Posit
         return Integer.parseInt(p.getProperty(s));
     }
 
-    public static GameObjects defaultGameObjects(){
+    public static GameObjects readFromFile(){
         Properties property = new Properties();
         try (FileInputStream file = new FileInputStream("src/main/resources/DefaultSettings.properties")) {
             property.load(file);

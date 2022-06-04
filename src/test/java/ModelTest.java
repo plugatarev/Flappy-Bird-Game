@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ModelTest {
 
-    private static final GameObjects defSettings = GameObjects.defaultGameObjects();
+    private static final GameObjects defSettings = GameObjects.readFromFile();
     private static final int birdPositionX = defSettings.birdPosition().x();
     private static final int fieldHeight = defSettings.fieldSize().height();
     private static final int birdWidth = defSettings.birdSize().width();
@@ -69,6 +69,12 @@ public class ModelTest {
 
     @Test
     public void SuccessfulPassageBarrier(){
+        /*
+                    |        |
+                  b
+                         b   |
+                    |        |
+         */
         int birdPosition = fieldHeight / 3;
         int upperY = birdPosition - 100;
         GameObjects gameObjects = createGameObjects(new Position(birdPositionX, birdPosition),
@@ -78,7 +84,7 @@ public class ModelTest {
         while (true) {
             gameObjects = field.getGameObjects();
             if (gameObjects.prevBarrierPosition() != null && isPassBarrier(gameObjects.prevBarrierPosition().x())) break;
-            else if (isPassBarrier(gameObjects.barrierPosition().x())) break;
+//            else if (isPassBarrier(gameObjects.barrierPosition().x())) break;
             field.update();
             int birdY = field.getGameObjects().birdPosition().y();
             if (upperY + defSettings.barrierSize().height() - birdY - birdHeight <= 5){

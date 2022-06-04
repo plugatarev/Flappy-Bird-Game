@@ -7,35 +7,35 @@ import java.util.Objects;
 import java.util.Random;
 
 public class Barrier {
-    private int currentPosition;
-    private final int WIDTH;
-    private final int SPACE;
-    private final int upperY;
+    private int x;
+    private final int width;
+    private final int gapSize;
+    private final int gapUpperY;
 
-    public Barrier(Position currentPosition, Size barrierSize){
-        WIDTH = barrierSize.width();
-        SPACE = barrierSize.height();
-        this.upperY = Objects.requireNonNullElseGet(currentPosition.y(), () -> new Random().nextInt(500) + 200);
-        this.currentPosition = currentPosition.x();
+    public Barrier(Position barrierPosition, Size barrierSize){
+        width = barrierSize.width();
+        gapSize = barrierSize.height();
+        this.gapUpperY = Objects.requireNonNullElseGet(barrierPosition.y(), () -> new Random().nextInt(500) + 200);
+        this.x = barrierPosition.x();
     }
 
     public void moveBarrier(){
-        currentPosition -= 1;
+        x -= 1;
     }
 
     public int getWidth() {
-        return WIDTH;
+        return width;
     }
 
-    public int getUpperY(){
-        return upperY;
+    public int getGapUpperY(){
+        return gapUpperY;
     }
 
-    public int getCurrentPosition(){
-        return currentPosition;
+    public int getX(){
+        return x;
     }
 
-    public int getSpace(){
-        return SPACE;
+    public int getGapSize(){
+        return gapSize;
     }
 }
