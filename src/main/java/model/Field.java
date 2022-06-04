@@ -39,7 +39,7 @@ public class Field{
         bird.move();
     }
 
-    public synchronized int getCurrentScore(){
+    public int getCurrentScore(){
         return currentScore;
     }
 

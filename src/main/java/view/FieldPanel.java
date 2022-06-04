@@ -11,10 +11,12 @@ import java.awt.event.*;
 public class FieldPanel extends JPanel {
     GameObjects field;
     private final int SCREEN_CENTER;
-    private static final int FONT_SIZE = 100;
-    private static final int SCREEN_HEIGHT = 705;
+    private final int FONT_SIZE;
+    private final int SCREEN_HEIGHT;
     FieldPanel(PressListener listener, GameObjects field){
         this.field = field;
+        FONT_SIZE = field.fieldSize().height() / 8;
+        SCREEN_HEIGHT = field.fieldSize().height() - field.groundHeight();
         SCREEN_CENTER = field.fieldSize().width() / 3 + 85;
         this.addKeyListener(new KeyAdapter() {
             @Override
