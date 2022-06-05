@@ -79,13 +79,27 @@ public class ModelTest {
         assertTrue(field.hasEnded());
     }
 
-    //TODO: create new test
     /*
-                    |        |
-                  b
-                         b   |
-                    |        |
+            |        |
+          b
+                 b   |
+            |        |
     */
+    @Test
+    public void testSuccessfulPassageBarrier(){
+        int birdPosition = 10;
+        int upperY = 0;
+        GameObjects gameObjects = createGameObjects(new Position(BIRD_POSITION_X, birdPosition), BIRD_POSITION_X + BIRD_WIDTH, upperY);
+        Field field = new Field(gameObjects);
+        while (true){
+            gameObjects = field.getGameObjects();
+            if (gameObjects.prevBarrier() != null && isPassBarrier(gameObjects.prevBarrier().x())) break;
+            field.update();
+        }
+        assertFalse(field.hasEnded());
+        assertEquals(field.getCurrentScore(), 1);
+
+    }
 
     @Test
     public void SuccessfulPassageBarrier(){
