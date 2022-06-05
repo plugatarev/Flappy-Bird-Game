@@ -18,8 +18,7 @@ public class Field{
         height = settings.fieldSize().height();
         width = settings.fieldSize().width();
         fieldBottom = height - settings.groundHeight();
-        Position birdPosition = settings.birdPosition();
-        bird = new Bird(birdPosition.x(), birdPosition.y(), settings.birdSize());
+        bird = new Bird(settings.birdPosition(), settings.birdSize());
         curBarrier = new Barrier(settings.curBarrier());
         prevBarrier = settings.prevBarrier() == null ? null : new Barrier(settings.prevBarrier());
     }

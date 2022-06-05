@@ -1,5 +1,6 @@
 package model;
 
+import utils.Position;
 import utils.Size;
 
 public class Bird {
@@ -10,9 +11,9 @@ public class Bird {
     private boolean isDown = true;
     private int upTime = 0;
 
-    Bird(int startX, int startY, Size birdSize){
-        x = startX;
-        y = startY;
+    Bird(Position birdPosition, Size birdSize){
+        x = birdPosition.x();
+        y = birdPosition.y();
         height = birdSize.height();
         width = birdSize.width();
     }
