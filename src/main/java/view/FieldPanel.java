@@ -2,7 +2,6 @@ package view;
 
 import utils.GameConfig;
 import utils.GameObjects;
-import utils.Position;
 
 import javax.swing.*;
 import java.awt.*;
@@ -56,14 +55,17 @@ public class FieldPanel extends JPanel {
     }
 
     private void drawBarriers(Graphics g){
-        Position b1 = field.barrierPosition();
-        Position b2 = field.prevBarrierPosition();
+        int curBarrierX = field.curBarrier().x();
+        int curBarrierY = field.curBarrier().gapUpperY();
+        int barrierWidth = field.curBarrier().width();
         g.setColor(Color.CYAN);
-        g.fillRect(b1.x(), b1.y(), field.barrierSize().width(), SCREEN_HEIGHT - b1.y());
-        g.fillRect(b1.x(), 0, field.barrierSize().width(), b1.y() - field.barrierSize().height());
-        if (b2 != null){
-            g.fillRect(b2.x(), b2.y(), field.barrierSize().width(), SCREEN_HEIGHT - b2.y());
-            g.fillRect(b2.x(), 0, field.barrierSize().width(), b2.y() - field.barrierSize().height());
+        g.fillRect(curBarrierX, curBarrierY, barrierWidth, SCREEN_HEIGHT - curBarrierY);
+        g.fillRect(curBarrierX, 0, barrierWidth, curBarrierY - field.curBarrier().gapSize());
+        if (field.prevBarrier() != null){
+            int prevBarrierX = field.prevBarrier().x();
+            int prevBarrierY = field.prevBarrier().gapUpperY();
+            g.fillRect(prevBarrierX, prevBarrierY, barrierWidth, SCREEN_HEIGHT - prevBarrierY);
+            g.fillRect(prevBarrierX, 0, barrierWidth, prevBarrierY - field.prevBarrier().gapSize());
         }
     }
 

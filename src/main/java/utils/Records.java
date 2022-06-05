@@ -1,11 +1,29 @@
 package utils;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
-public record Records(SortRecordsArray records) {
+public class Records {
+
+    private record Record(String userName, int scores) {
+        @Override
+        public String toString() {
+            return userName + " " + scores;
+        }
+    }
+
     private static final String RECORDS_FILE = "records";
     private static Records instance = null;
+    private final static int LENGTH = 10;
+    private final Record[] records;
+    private int pos;
+
+    Records(Record[] records, int pos){
+        this.records = records;
+        this.pos = pos;
+    }
 
     public static Records getInstance() {
         if (instance != null) return instance;
@@ -14,18 +32,19 @@ public record Records(SortRecordsArray records) {
     }
 
     public static Records loadScores() {
-        SortRecordsArray records = new SortRecordsArray();
+        Record[] records = new Record[LENGTH];
+        int pos = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(RECORDS_FILE))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] tmp = line.split(" ");
-                records.add(new Record(tmp[0], Integer.parseInt(tmp[1])));
+                add(tmp[0], Integer.parseInt(tmp[1]), records, pos++);
             }
         } catch (IOException e) {
             System.out.println("Couldn't load old records");
-            return new Records(new SortRecordsArray());
+            return new Records(new Record[10], 0);
         }
-        return new Records(records);
+        return new Records(records, pos);
     }
 
     public void saveScores() {
@@ -38,15 +57,31 @@ public record Records(SortRecordsArray records) {
     }
 
     public String createRecordTable() {
-        return records.getArrayList().stream().map(java.lang.Record::toString).collect(Collectors.joining("\n"));
+        ArrayList<Record> recordList = new ArrayList<>(List.of(records));
+        return recordList.stream().map(java.lang.Record::toString).collect(Collectors.joining("\n"));
     }
 
     public boolean addNewRecord(String name, int score) {
         if (score == 0) throw new IllegalStateException("Zero result cannot be added to the record table");
         if (!isCorrect(name)) return false;
-        Record cur = new Record(name, score);
-        if (records.contains(cur)) return true;
-        records.add(cur);
+        if (add(name, score, records, pos)) pos++;
+        return true;
+    }
+
+    private static boolean add(String name, int score, Record[] array, int numberElements){
+        Record curRecord = new Record(name, score);
+        if (numberElements == 10 && score < array[9].scores) return false;
+        //TODO: Arrays.binarySearch()
+        for (int i = 0; i < numberElements; i++){
+            if (score == array[i].scores && name.equals(array[i].userName)) continue;
+            if (score >= array[i].scores()){
+                if (numberElements == 10) numberElements--;
+                System.arraycopy(array, i, array, i + 1, numberElements - i);
+                array[i] = curRecord;
+                return true;
+            }
+        }
+        array[numberElements] = curRecord;
         return true;
     }
 

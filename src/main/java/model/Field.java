@@ -1,5 +1,6 @@
 package model;
 
+import utils.BarrierModel;
 import utils.GameObjects;
 import utils.Position;
 import utils.Size;
@@ -19,9 +20,8 @@ public class Field{
         fieldBottom = height - settings.groundHeight();
         Position birdPosition = settings.birdPosition();
         bird = new Bird(birdPosition.x(), birdPosition.y(), settings.birdSize());
-        curBarrier = new Barrier(settings.barrierPosition(), settings.barrierSize());
-        prevBarrier = settings.prevBarrierPosition() == null ?
-                null : new Barrier(settings.prevBarrierPosition(), settings.barrierSize());
+        curBarrier = new Barrier(settings.curBarrier());
+        prevBarrier = settings.prevBarrier() == null ? null : new Barrier(settings.prevBarrier());
     }
 
     public void update(){
@@ -30,7 +30,7 @@ public class Field{
         }
         if (bird.getX() + bird.getWidth() >= barrierCenterX()) {
             prevBarrier = curBarrier;
-            curBarrier = new Barrier(new Position(width - 50, null), new Size(prevBarrier.getGapSize(), prevBarrier.getWidth()));
+            curBarrier = new Barrier(new BarrierModel(width - 50, prevBarrier.getWidth(), prevBarrier.getGapSize(), null));
             currentScore++;
         }
         curBarrier.moveBarrier();
@@ -51,7 +51,7 @@ public class Field{
     }
 
     public void clear(){
-        curBarrier = new Barrier(new Position(width - 50, null), new Size(curBarrier.getGapSize(), curBarrier.getWidth()));
+        curBarrier = new Barrier(new BarrierModel(width - 50, curBarrier.getWidth(), curBarrier.getGapSize(), null));
         prevBarrier = null;
         currentScore = 0;
         bird.reset(height / 3);
@@ -59,11 +59,11 @@ public class Field{
 
     public GameObjects getGameObjects(){
         Position birdPosition = new Position(bird.getX(), bird.getY());
-        Position barrierPosition = new Position(curBarrier.getX(), curBarrier.getGapUpperY());
-        Position prevBarrierPosition = prevBarrier == null ? null : new Position(prevBarrier.getX(), prevBarrier.getGapUpperY());
+        BarrierModel curBarrierModel = new BarrierModel(curBarrier.getX(), curBarrier.getWidth(), curBarrier.getGapSize(), curBarrier.getGapUpperY());
+        BarrierModel prevBarrierModel = prevBarrier == null ?
+                null : new BarrierModel(prevBarrier.getX(), prevBarrier.getWidth(), prevBarrier.getGapSize(), prevBarrier.getGapUpperY());
         return new GameObjects(new Size(height, width), new Size(bird.getHeight(), bird.getWidth()),
-                new Size(curBarrier.getGapSize(), curBarrier.getWidth()),
-                birdPosition, barrierPosition, prevBarrierPosition, getCurrentScore(), height - fieldBottom);
+                birdPosition, curBarrierModel, prevBarrierModel, getCurrentScore(), height - fieldBottom);
     }
 
     public void changeBirdDirection(){
