@@ -1,93 +1,104 @@
 import model.Field;
 import org.junit.jupiter.api.Test;
+import utils.BarrierModel;
 import utils.GameObjects;
 import utils.Position;
+import utils.Size;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ModelTest {
 
-    private static final GameObjects defSettings = GameObjects.readFromFile();
-    private static final int birdPositionX = defSettings.birdPosition().x();
-    private static final int fieldHeight = defSettings.fieldSize().height();
-    private static final int birdWidth = defSettings.birdSize().width();
-    private static final int birdHeight = defSettings.birdSize().height();
+    private static final int BIRD_POSITION_X = 200;
+    private static final int FIELD_HEIGHT = 800;
+    private static final int FIELD_WIDTH = 800;
+    private static final int BIRD_WIDTH = 90;
+    private static final int BIRD_HEIGHT = 80;
+    private static final int GROUND_HEIGHT = 95;
+    private static final int BARRIER_GAP = 200;
+    private static final int BARRIER_WIDTH = 120;
 
-    private GameObjects createGameObjects(Position bird, Position barrier){
-        return new GameObjects(defSettings.fieldSize(), defSettings.birdSize(),
-                bird, barrier, null, 0, defSettings.groundHeight());
+    private GameObjects createGameObjects(Position bird, int barrierX, int barrierGapUpperY){
+        return new GameObjects(new Size(FIELD_HEIGHT, FIELD_WIDTH), new Size(BIRD_HEIGHT, BIRD_WIDTH),
+                bird, new BarrierModel(barrierX, BARRIER_WIDTH, BARRIER_GAP, barrierGapUpperY), null, 0, GROUND_HEIGHT);
     }
 
     @Test
     public void BorderCrash() {
-        Position birdPosition = new Position(birdPositionX,fieldHeight - birdHeight - defSettings.groundHeight());
-        Field field = new Field(createGameObjects(birdPosition, defSettings.curBarrier()));
+        Position birdPosition = new Position(BIRD_POSITION_X, FIELD_HEIGHT - BIRD_HEIGHT - GROUND_HEIGHT - 1);
+        Field field = new Field(createGameObjects(birdPosition, FIELD_WIDTH, 0));
+        field.update();
         assertTrue(field.hasEnded());
 
-        birdPosition = new Position(birdPositionX, 0);
-        field = new Field(createGameObjects(birdPosition, defSettings.curBarrier()));
+        birdPosition = new Position(BIRD_POSITION_X, 1);
+        field = new Field(createGameObjects(birdPosition, FIELD_WIDTH, 0));
+        field.changeBirdDirection();
+        field.update();
         assertTrue(field.hasEnded());
     }
 
     @Test
     public void BarrierCrash() {
-        Position birdPosition = new Position(birdPositionX, fieldHeight / 2);
-        GameObjects gameObjects = createGameObjects(birdPosition, new Position(birdPositionX + birdWidth, 0));
+        Position birdPosition = new Position(BIRD_POSITION_X, FIELD_HEIGHT / 2);
+        GameObjects gameObjects = createGameObjects(birdPosition, BIRD_POSITION_X + BIRD_WIDTH + 1, 0);
         Field field = new Field(gameObjects);
+        field.update();
         assertTrue(field.hasEnded());
     }
 
     @Test
     public void UpperAngleBarrierCrash(){
-        int birdPosition = fieldHeight / 2;
-        Field field = new Field(createGameObjects(new Position(birdPositionX, birdPosition),
-                new Position(birdPositionX + birdWidth, birdPosition)));
+        int birdPosition = FIELD_HEIGHT / 2;
+        Field field = new Field(createGameObjects(new Position(BIRD_POSITION_X, birdPosition),
+                BIRD_POSITION_X + BIRD_WIDTH, birdPosition - 1));
+        field.changeBirdDirection();
+        field.update();
         assertTrue(field.hasEnded());
     }
 
     @Test
     public void LowerAngleBarrierCrash(){
-        int birdPosition = fieldHeight / 2;
-        int upperY = birdPosition + defSettings.birdSize().height() + defSettings.barrierSize().height();
-        Field field = new Field(createGameObjects(new Position(birdPositionX, birdPosition),
-                new Position(birdPositionX + birdWidth, upperY)));
+        int birdPosition = FIELD_HEIGHT / 2;
+        int upperY = birdPosition + BIRD_HEIGHT + BARRIER_GAP + 1;
+        Field field = new Field(createGameObjects(new Position(BIRD_POSITION_X, birdPosition), BIRD_POSITION_X + BIRD_WIDTH, upperY));
+        field.update();
         assertTrue(field.hasEnded());
     }
 
     @Test
     public void InsideBarrierCrash(){
-        int birdPosition = fieldHeight / 3;
-        Field field = new Field(createGameObjects(new Position(birdPositionX, birdPosition),
-                new Position(birdPositionX + birdWidth / 2, birdPosition)));
+        int birdPosition = FIELD_HEIGHT / 3;
+        Field field = new Field(createGameObjects(new Position(BIRD_POSITION_X, birdPosition), BIRD_POSITION_X + BIRD_WIDTH / 2, birdPosition - 1));
+        field.changeBirdDirection();
+        field.update();
         assertTrue(field.hasEnded());
 
-        int upperY = birdPosition + birdHeight + defSettings.barrierSize().height();
-        field = new Field(createGameObjects(new Position(birdPositionX, birdPosition),
-                new Position(birdPositionX + birdWidth / 2, upperY)));
+        int upperY = birdPosition + BIRD_HEIGHT + BARRIER_GAP + 1;
+        field = new Field(createGameObjects(new Position(BIRD_POSITION_X, birdPosition), BIRD_POSITION_X + BIRD_WIDTH / 2, upperY));
+        field.update();
         assertTrue(field.hasEnded());
     }
 
-    @Test
-    public void SuccessfulPassageBarrier(){
-        /*
+    //TODO: create new test
+    /*
                     |        |
                   b
                          b   |
                     |        |
-         */
-        int birdPosition = fieldHeight / 3;
+    */
+
+    @Test
+    public void SuccessfulPassageBarrier(){
+        int birdPosition = FIELD_HEIGHT / 3;
         int upperY = birdPosition - 100;
-        GameObjects gameObjects = createGameObjects(new Position(birdPositionX, birdPosition),
-                new Position(birdPositionX + birdWidth / 2, upperY));
+        GameObjects gameObjects = createGameObjects(new Position(BIRD_POSITION_X, birdPosition), BIRD_POSITION_X + BIRD_WIDTH / 2, upperY);
         Field field = new Field(gameObjects);
-        System.out.println(upperY + defSettings.barrierSize().height());
         while (true) {
             gameObjects = field.getGameObjects();
             if (gameObjects.prevBarrier() != null && isPassBarrier(gameObjects.prevBarrier().x())) break;
-//            else if (isPassBarrier(gameObjects.barrierPosition().x())) break;
             field.update();
             int birdY = field.getGameObjects().birdPosition().y();
-            if (upperY + defSettings.barrierSize().height() - birdY - birdHeight <= 5){
+            if (upperY + BARRIER_GAP - birdY - BIRD_HEIGHT <= 5){
                 field.changeBirdDirection();
             }
             if (birdY - upperY <= 5){
@@ -99,6 +110,6 @@ public class ModelTest {
     }
 
     private boolean isPassBarrier(int barrierPosition){
-        return birdPositionX > barrierPosition + defSettings.barrierSize().width();
+        return BIRD_POSITION_X > barrierPosition + BARRIER_WIDTH;
     }
 }

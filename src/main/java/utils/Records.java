@@ -71,7 +71,6 @@ public class Records {
     private static boolean add(String name, int score, Record[] array, int numberElements){
         Record curRecord = new Record(name, score);
         if (numberElements == 10 && score < array[9].scores) return false;
-        //TODO: Arrays.binarySearch()
         for (int i = 0; i < numberElements; i++){
             if (score == array[i].scores && name.equals(array[i].userName)) continue;
             if (score >= array[i].scores()){
