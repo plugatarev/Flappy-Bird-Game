@@ -1,9 +1,6 @@
 package utils;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class Records {
 
@@ -57,8 +54,12 @@ public class Records {
     }
 
     public String createRecordTable() {
-        ArrayList<Record> recordList = new ArrayList<>(List.of(records));
-        return recordList.stream().map(java.lang.Record::toString).collect(Collectors.joining("\n"));
+        StringBuilder s = new StringBuilder();
+        for (int i = 0; i < pos; i++){
+            Record r = records[i];
+            s.append(r.userName).append(" ").append(r.scores).append("\n");
+        }
+        return s.toString();
     }
 
     public boolean addNewRecord(String name, int score) {
