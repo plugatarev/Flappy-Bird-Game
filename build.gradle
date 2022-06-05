@@ -1,8 +1,6 @@
-plugins {
-    id 'java'
-}
+apply plugin: 'java'
 
-group 'org.example'
+group 'com.github.plugatarev'
 version '1.0-SNAPSHOT'
 
 repositories {
