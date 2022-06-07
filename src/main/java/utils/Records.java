@@ -69,16 +69,19 @@ public class Records {
         return true;
     }
 
+    /**
+     * returns true when number of elements increase, in otherwise returns false
+     */
     private static boolean add(String name, int score, Record[] array, int numberElements){
         Record curRecord = new Record(name, score);
         if (numberElements == 10 && score < array[9].scores) return false;
         for (int i = 0; i < numberElements; i++){
-            if (score == array[i].scores && name.equals(array[i].userName)) continue;
+            if (score == array[i].scores && name.equals(array[i].userName)) return false;
             if (score >= array[i].scores()){
                 if (numberElements == 10) numberElements--;
                 System.arraycopy(array, i, array, i + 1, numberElements - i);
                 array[i] = curRecord;
-                return true;
+                return false;
             }
         }
         array[numberElements] = curRecord;
@@ -86,7 +89,7 @@ public class Records {
     }
 
     private boolean isCorrect(String res) {
-        if (res.length() == 0) return false;
+        if (res == null || res.length() == 0) return false;
         int i = 0;
         while (i < res.length()) {
             if (res.charAt(i) == ' ') return false;
