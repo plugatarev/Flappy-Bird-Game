@@ -24,7 +24,7 @@ public class ModelTest {
     }
 
     @Test
-    public void BorderCrash() {
+    public void borderCrash() {
         Position birdPosition = new Position(BIRD_POSITION_X, FIELD_HEIGHT - BIRD_HEIGHT - GROUND_HEIGHT - 1);
         Field field = new Field(createGameObjects(birdPosition, FIELD_WIDTH, 0));
         field.update();
@@ -38,7 +38,7 @@ public class ModelTest {
     }
 
     @Test
-    public void BarrierCrash() {
+    public void barrierCrash() {
         Position birdPosition = new Position(BIRD_POSITION_X, FIELD_HEIGHT / 2);
         GameObjects gameObjects = createGameObjects(birdPosition, BIRD_POSITION_X + BIRD_WIDTH + 1, 0);
         Field field = new Field(gameObjects);
@@ -47,7 +47,7 @@ public class ModelTest {
     }
 
     @Test
-    public void UpperAngleBarrierCrash(){
+    public void upperAngleBarrierCrash(){
         int birdPosition = FIELD_HEIGHT / 2;
         Field field = new Field(createGameObjects(new Position(BIRD_POSITION_X, birdPosition),
                 BIRD_POSITION_X + BIRD_WIDTH, birdPosition - 1));
@@ -57,7 +57,7 @@ public class ModelTest {
     }
 
     @Test
-    public void LowerAngleBarrierCrash(){
+    public void lowerAngleBarrierCrash(){
         int birdPosition = FIELD_HEIGHT / 2;
         int upperY = birdPosition + BIRD_HEIGHT + BARRIER_GAP + 1;
         Field field = new Field(createGameObjects(new Position(BIRD_POSITION_X, birdPosition), BIRD_POSITION_X + BIRD_WIDTH, upperY));
@@ -66,7 +66,7 @@ public class ModelTest {
     }
 
     @Test
-    public void InsideBarrierCrash(){
+    public void insideBarrierCrash(){
         int birdPosition = FIELD_HEIGHT / 3;
         Field field = new Field(createGameObjects(new Position(BIRD_POSITION_X, birdPosition), BIRD_POSITION_X + BIRD_WIDTH / 2, birdPosition - 1));
         field.changeBirdDirection();
@@ -91,6 +91,7 @@ public class ModelTest {
         int upperY = 0;
         GameObjects gameObjects = createGameObjects(new Position(BIRD_POSITION_X, birdPosition), BIRD_POSITION_X + BIRD_WIDTH, upperY);
         Field field = new Field(gameObjects);
+        // CR: this test might be indefinite, better to have some timeout
         while (true){
             gameObjects = field.getGameObjects();
             if (gameObjects.prevBarrier() != null && isPassBarrier(gameObjects.prevBarrier().x())) break;
@@ -102,7 +103,7 @@ public class ModelTest {
     }
 
     @Test
-    public void SuccessfulPassageBarrier(){
+    public void successfulPassageBarrier(){
         int birdPosition = FIELD_HEIGHT / 3;
         int upperY = birdPosition - 100;
         GameObjects gameObjects = createGameObjects(new Position(BIRD_POSITION_X, birdPosition), BIRD_POSITION_X + BIRD_WIDTH / 2, upperY);

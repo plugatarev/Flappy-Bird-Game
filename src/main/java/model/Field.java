@@ -76,7 +76,6 @@ public class Field{
     }
 
     public boolean birdTouchBorder() {
-        int TOP_FIELD = 0;
-        return (bird.getY() + bird.getHeight() >= fieldBottom) || (bird.getY() <= TOP_FIELD);
+        return (bird.getY() + bird.getHeight() >= fieldBottom) || (bird.getY() <= 0);
     }
 }

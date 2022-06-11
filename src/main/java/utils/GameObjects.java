@@ -17,13 +17,20 @@ public record GameObjects(Size fieldSize, Size birdSize, Position birdPosition,
         Properties property = new Properties();
         try (FileInputStream file = new FileInputStream("src/main/resources/DefaultSettings.properties")) {
             property.load(file);
-            BarrierModel curBarrier = new BarrierModel(getValue(property, "barrier_position"), getValue(property, "barrier_width"),
-                    getValue(property, "barrier_gap"), null);
+            Integer barrierPosition = getValue(property, "barrier_position");
+            Integer barrierWidth = getValue(property, "barrier_width");
+            Integer barrierGap = getValue(property, "barrier_gap");
+            BarrierModel curBarrier = new BarrierModel(barrierPosition, barrierWidth, barrierGap, null);
 
-            return new GameObjects(new Size(getValue(property, "field_height"), getValue(property, "field_width")),
-                                   new Size(getValue(property, "bird_height"), getValue(property, "bird_width")),
-                    new Position(getValue(property, "bird_x"), getValue(property, "bird_y")),
-                    curBarrier,null, getValue(property, "score"), getValue(property, "ground_height"));
+            Size fieldSize = new Size(getValue(property, "field_height"), getValue(property, "field_width"));
+            Integer height = getValue(property, "ground_height");
+
+            Size birdSize = new Size(getValue(property, "bird_height"), getValue(property, "bird_width"));
+            Position birdPosition = new Position(getValue(property, "bird_x"), getValue(property, "bird_y"));
+
+            Integer score = getValue(property, "score");
+
+            return new GameObjects(fieldSize, birdSize, birdPosition, curBarrier,null, score, height);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }

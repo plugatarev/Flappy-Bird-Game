@@ -6,41 +6,41 @@ import java.nio.file.Path;
 import java.util.Properties;
 
 public class GameConfig {
-    private final String NAME;
-    private final String MENU;
-    private final String NEW_GAME;
-    private final String EXIT;
-    private final String HIGH_SCORES;
-    private final String ABOUT;
-    private final String GAME_RULES;
-    private final String END_GAME;
-    private final String BIRD_IMAGE;
-    private final String BACKGROUND_IMAGE;
-    private final String CHOICE;
+    private final String name;
+    private final String menu;
+    private final String newGame;
+    private final String exit;
+    private final String highScores;
+    private final String about;
+    private final String gameRules;
+    private final String endGame;
+    private final String birdImage;
+    private final String backgroundImage;
+    private final String choice;
 
-    private static GameConfig gameConfig;
+    private static GameConfig GAME_CONFIG;
 
     private GameConfig(String name, String menu, String newGame, String exit, String highScores, String about,
                        String gameRules, String endGame, String birdImage, String backgroundImage,
                        String choice)  {
-        NAME = name;
-        MENU = menu;
-        NEW_GAME = newGame;
-        EXIT = exit;
-        HIGH_SCORES = highScores;
-        ABOUT = about;
-        GAME_RULES = gameRules;
-        END_GAME = endGame;
-        BIRD_IMAGE = birdImage;
-        BACKGROUND_IMAGE = backgroundImage;
-        CHOICE = choice;
+        this.name = name;
+        this.menu = menu;
+        this.newGame = newGame;
+        this.exit = exit;
+        this.highScores = highScores;
+        this.about = about;
+        this.gameRules = gameRules;
+        this.endGame = endGame;
+        this.birdImage = birdImage;
+        this.backgroundImage = backgroundImage;
+        this.choice = choice;
     }
 
     private static void getInstance() {
-        if (gameConfig != null) {
+        if (GAME_CONFIG != null) {
             return;
         }
-        gameConfig = loadConfig();
+        GAME_CONFIG = loadConfig();
     }
 
     private static GameConfig loadConfig() {
@@ -61,19 +61,21 @@ public class GameConfig {
     }
 
     public static String getConfig(String config){
+        // CR: redundant
         getInstance();
+        // CR: just make this class record, no need for name -> property matching
         return switch (config){
-            case "name" -> gameConfig.NAME;
-            case "menu" -> gameConfig.MENU;
-            case "newGame" -> gameConfig.NEW_GAME;
-            case "exit" -> gameConfig.EXIT;
-            case "highScores" -> gameConfig.HIGH_SCORES;
-            case "about" -> gameConfig.ABOUT;
-            case "end" -> gameConfig.END_GAME;
-            case "birdImage" -> gameConfig.BIRD_IMAGE;
-            case "backgroundImage" -> gameConfig.BACKGROUND_IMAGE;
-            case "choice" -> gameConfig.CHOICE;
-            case "gameRules" -> gameConfig.GAME_RULES;
+            case "name" -> GAME_CONFIG.name;
+            case "menu" -> GAME_CONFIG.menu;
+            case "newGame" -> GAME_CONFIG.newGame;
+            case "exit" -> GAME_CONFIG.exit;
+            case "highScores" -> GAME_CONFIG.highScores;
+            case "about" -> GAME_CONFIG.about;
+            case "end" -> GAME_CONFIG.endGame;
+            case "birdImage" -> GAME_CONFIG.birdImage;
+            case "backgroundImage" -> GAME_CONFIG.backgroundImage;
+            case "choice" -> GAME_CONFIG.choice;
+            case "gameRules" -> GAME_CONFIG.gameRules;
             default -> throw new RuntimeException("Not found config: " + config);
         };
     }

@@ -69,7 +69,7 @@ public class FlappyBirdFrame extends JFrame {
             String res;
             do{
                 res = JOptionPane.showInputDialog(this, "Enter your name");
-            }while(!records.addNewRecord(res, score));
+            } while(!records.addNewRecord(res, score));
         }
         showChoiceMenu();
     }

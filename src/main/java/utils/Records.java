@@ -12,20 +12,20 @@ public class Records {
     }
 
     private static final String RECORDS_FILE = "records";
-    private static Records instance = null;
+    private static Records INSTANCE = null;
     private final static int LENGTH = 10;
     private final Record[] records;
     private int pos;
 
-    Records(Record[] records, int pos){
+    private Records(Record[] records, int pos){
         this.records = records;
         this.pos = pos;
     }
 
     public static Records getInstance() {
-        if (instance != null) return instance;
-        instance = loadScores();
-        return instance;
+        if (INSTANCE != null) return INSTANCE;
+        INSTANCE = loadScores();
+        return INSTANCE;
     }
 
     public static Records loadScores() {
@@ -35,10 +35,12 @@ public class Records {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] tmp = line.split(" ");
+                // CR: possible array out of bounds, also might have more components
+                // CR: records in file should be ordered, otherwise they are incorrect
                 add(tmp[0], Integer.parseInt(tmp[1]), records, pos++);
             }
         } catch (IOException e) {
-            System.out.println("Couldn't load old records");
+            System.out.println("Couldn't load old records: " + e);
             return new Records(new Record[10], 0);
         }
         return new Records(records, pos);
@@ -46,6 +48,7 @@ public class Records {
 
     public void saveScores() {
         String table = createRecordTable();
+//         CR: Files.writeString()
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(RECORDS_FILE))) {
             writer.write(table);
         } catch (IOException e) {
@@ -63,6 +66,7 @@ public class Records {
     }
 
     public boolean addNewRecord(String name, int score) {
+        // CR: < 0 ?
         if (score == 0) throw new IllegalStateException("Zero result cannot be added to the record table");
         if (!isCorrect(name)) return false;
         if (add(name, score, records, pos)) pos++;
@@ -89,6 +93,7 @@ public class Records {
     }
 
     private boolean isCorrect(String res) {
+        // CR: res.isBlank()
         if (res == null || res.length() == 0) return false;
         int i = 0;
         while (i < res.length()) {
