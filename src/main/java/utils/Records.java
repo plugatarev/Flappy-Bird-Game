@@ -1,6 +1,8 @@
 package utils;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class Records {
 
@@ -35,12 +37,15 @@ public class Records {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] tmp = line.split(" ");
-                // CR: possible array out of bounds, also might have more components
-                // CR: records in file should be ordered, otherwise they are incorrect
-                add(tmp[0], Integer.parseInt(tmp[1]), records, pos++);
+                if (tmp.length == 1) throw new RuntimeException("record not contains scores");
+                int record = Integer.parseInt(tmp[1]);
+                if (pos == LENGTH || (pos != 0 && record > records[pos - 1].scores)){
+                    throw new RuntimeException("number of records exceeds exceeds the limit or the order is incorrect\n");
+                }
+                add(tmp[0], record, records, pos++);
             }
-        } catch (IOException e) {
-            System.out.println("Couldn't load old records: " + e);
+        } catch (IOException | RuntimeException e) {
+            System.out.println("Couldn't load old records: " + e.getMessage());
             return new Records(new Record[10], 0);
         }
         return new Records(records, pos);
@@ -48,11 +53,10 @@ public class Records {
 
     public void saveScores() {
         String table = createRecordTable();
-//         CR: Files.writeString()
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(RECORDS_FILE))) {
-            writer.write(table);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to save the records");
+        try{
+            Files.writeString(Path.of(RECORDS_FILE), table);
+        } catch (IOException e){
+            throw new RuntimeException("Failed to save the records: " + e.getMessage());
         }
     }
 
@@ -66,8 +70,7 @@ public class Records {
     }
 
     public boolean addNewRecord(String name, int score) {
-        // CR: < 0 ?
-        if (score == 0) throw new IllegalStateException("Zero result cannot be added to the record table");
+        if (score < 0) throw new IllegalStateException("Negative result cannot be added to the record table");
         if (!isCorrect(name)) return false;
         if (add(name, score, records, pos)) pos++;
         return true;
@@ -82,10 +85,14 @@ public class Records {
         for (int i = 0; i < numberElements; i++){
             if (score == array[i].scores && name.equals(array[i].userName)) return false;
             if (score >= array[i].scores()){
-                if (numberElements == 10) numberElements--;
+                boolean isFull = false;
+                if (numberElements == 10){
+                    isFull = true;
+                    numberElements--;
+                }
                 System.arraycopy(array, i, array, i + 1, numberElements - i);
                 array[i] = curRecord;
-                return false;
+                return !isFull;
             }
         }
         array[numberElements] = curRecord;
@@ -93,8 +100,7 @@ public class Records {
     }
 
     private boolean isCorrect(String res) {
-        // CR: res.isBlank()
-        if (res == null || res.length() == 0) return false;
+        if (res == null || res.isBlank()) return false;
         int i = 0;
         while (i < res.length()) {
             if (res.charAt(i) == ' ') return false;
