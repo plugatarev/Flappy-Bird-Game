@@ -26,11 +26,11 @@ public class Records {
 
     public static Records getInstance() {
         if (INSTANCE != null) return INSTANCE;
-        INSTANCE = loadScores();
+        INSTANCE = loadRecords();
         return INSTANCE;
     }
 
-    public static Records loadScores() {
+    public static Records loadRecords() {
         Record[] records = new Record[LENGTH];
         int pos = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(RECORDS_FILE))) {
