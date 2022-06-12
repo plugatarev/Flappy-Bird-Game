@@ -50,7 +50,7 @@ public class FieldPanel extends JPanel {
     }
 
     private void drawBird(Graphics g){
-        Image birdImage = new ImageIcon(GameConfig.getConfig("birdImage")).getImage();
+        Image birdImage = new ImageIcon(GameConfig.getInstance().birdImage()).getImage();
         g.drawImage(birdImage, field.birdPosition().x(), field.birdPosition().y(), field.birdSize().width(), field.birdSize().height(), null);
     }
 
@@ -70,7 +70,7 @@ public class FieldPanel extends JPanel {
     }
 
     private void drawBackground(Graphics g){
-        Image backgroundImage = new ImageIcon(GameConfig.getConfig("backgroundImage")).getImage();
+        Image backgroundImage = new ImageIcon(GameConfig.getInstance().backgroundImage()).getImage();
         g.drawImage(backgroundImage, 0, 0, this);
     }
 }

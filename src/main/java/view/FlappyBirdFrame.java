@@ -8,15 +8,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.lang.reflect.GenericArrayType;
 
 public class FlappyBirdFrame extends JFrame {
     private FieldPanel fieldPanel;
-    private final String[] CHOOSE_OPTIONS = {GameConfig.getConfig("newGame"), GameConfig.getConfig("highScores"), GameConfig.getConfig("exit")};
+    private final String[] CHOOSE_OPTIONS = {GameConfig.getInstance().newGame(), GameConfig.getInstance().highScores(), GameConfig.getInstance().exit()};
     private final NewGameListener newGameListener;
     private final Records records = Records.getInstance();
 
     public FlappyBirdFrame(NewGameListener newGameListener, PressListener listener, GameObjects field){
-        super(GameConfig.getConfig("name"));
+        super(GameConfig.getInstance().name());
         this.newGameListener = newGameListener;
         createFieldPanel(listener, field);
         addReactionWindowClosing();
@@ -45,8 +46,8 @@ public class FlappyBirdFrame extends JFrame {
     }
 
     private void showChoiceMenu(){
-        int result = JOptionPane.showOptionDialog(this, GameConfig.getConfig("choice"),
-                GameConfig.getConfig("end"),
+        int result = JOptionPane.showOptionDialog(this, GameConfig.getInstance().choice(),
+                GameConfig.getInstance().endGame(),
                 JOptionPane.YES_NO_CANCEL_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
                 null,
@@ -68,7 +69,7 @@ public class FlappyBirdFrame extends JFrame {
         if (score > 0) {
             String res;
             do{
-                res = JOptionPane.showInputDialog(this, "Enter your name");
+                res = JOptionPane.showInputDialog(this, "Enter your name", "Login", JOptionPane.PLAIN_MESSAGE);
             } while(!records.addNewRecord(res, score));
         }
         showChoiceMenu();
@@ -81,12 +82,12 @@ public class FlappyBirdFrame extends JFrame {
 
     private void setupMenu() {
         JMenuBar menuBar = new JMenuBar();
-        JMenu menu = new JMenu(GameConfig.getConfig("menu"));
+        JMenu menu = new JMenu(GameConfig.getInstance().menu());
 
-        JMenuItem aboutGameItem = new JMenuItem(GameConfig.getConfig("about"));
-        JMenuItem highScoresItem = new JMenuItem(GameConfig.getConfig("highScores"));
-        JMenuItem newGameItem = new JMenuItem(GameConfig.getConfig("newGame"));
-        JMenuItem exitItem = new JMenuItem(GameConfig.getConfig("exit"));
+        JMenuItem aboutGameItem = new JMenuItem(GameConfig.getInstance().about());
+        JMenuItem highScoresItem = new JMenuItem(GameConfig.getInstance().highScores());
+        JMenuItem newGameItem = new JMenuItem(GameConfig.getInstance().newGame());
+        JMenuItem exitItem = new JMenuItem(GameConfig.getInstance().exit());
 
         newGameItem.addActionListener(event -> newGameListener.newGame());
         exitItem.addActionListener(event -> System.exit(0));
@@ -111,7 +112,7 @@ public class FlappyBirdFrame extends JFrame {
     }
 
     private void printAboutInformation() {
-        String information = GameConfig.getConfig("gameRules");
-        JOptionPane.showMessageDialog(this, information);
+        String information = GameConfig.getInstance().gameRules();
+        JOptionPane.showMessageDialog(this, information, GameConfig.getInstance().about(), JOptionPane.PLAIN_MESSAGE);
     }
 }
