@@ -91,8 +91,9 @@ public class ModelTest {
         int upperY = 0;
         GameObjects gameObjects = createGameObjects(new Position(BIRD_POSITION_X, birdPosition), BIRD_POSITION_X + BIRD_WIDTH, upperY);
         Field field = new Field(gameObjects);
-        // CR: this test might be indefinite, better to have some timeout
-        while (true){
+        // OK CR: this test might be indefinite, better to have some timeout
+        int timeout = 220;
+        while (--timeout > 0){
             gameObjects = field.getGameObjects();
             if (gameObjects.prevBarrier() != null && isPassBarrier(gameObjects.prevBarrier().x())) break;
             field.update();
