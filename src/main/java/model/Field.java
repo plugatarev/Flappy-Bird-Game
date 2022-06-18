@@ -8,11 +8,13 @@ import utils.Size;
 public class Field{
     private final int fieldBottom;
     private final int height;
-    private final int width;
     private final Bird bird;
+    private final int width;
     private Barrier curBarrier;
     private Barrier prevBarrier;
     private int currentScore;
+
+    private static final double INITIAL_BARRIER_OFFSET = 15.0 / 16;
 
     public Field(GameObjects settings) {
         height = settings.fieldSize().height();
@@ -29,7 +31,7 @@ public class Field{
         }
         if (bird.getX() + bird.getWidth() >= barrierCenterX()) {
             prevBarrier = curBarrier;
-            curBarrier = new Barrier(new BarrierModel(width - 50, prevBarrier.getWidth(), prevBarrier.getGapSize(), null));
+            curBarrier = new Barrier(new BarrierModel((int) (width * INITIAL_BARRIER_OFFSET), prevBarrier.getWidth(), prevBarrier.getGapSize(), null));
             currentScore++;
         }
         curBarrier.moveBarrier();
@@ -49,13 +51,6 @@ public class Field{
                 (prevBarrier != null && birdTouchBarrier(prevBarrier));
     }
 
-    public void clear(){
-        curBarrier = new Barrier(new BarrierModel(width - 50, curBarrier.getWidth(), curBarrier.getGapSize(), null));
-        prevBarrier = null;
-        currentScore = 0;
-        bird.reset(height / 3);
-    }
-
     public GameObjects getGameObjects(){
         Position birdPosition = new Position(bird.getX(), bird.getY());
         BarrierModel curBarrierModel = new BarrierModel(curBarrier.getX(), curBarrier.getWidth(), curBarrier.getGapSize(), curBarrier.getGapUpperY());
@@ -63,6 +58,13 @@ public class Field{
                 null : new BarrierModel(prevBarrier.getX(), prevBarrier.getWidth(), prevBarrier.getGapSize(), prevBarrier.getGapUpperY());
         return new GameObjects(new Size(height, width), new Size(bird.getHeight(), bird.getWidth()),
                 birdPosition, curBarrierModel, prevBarrierModel, getCurrentScore(), height - fieldBottom);
+    }
+
+    public void clear(){
+        curBarrier = new Barrier(new BarrierModel((int) (width * INITIAL_BARRIER_OFFSET), curBarrier.getWidth(), curBarrier.getGapSize(), null));
+        prevBarrier = null;
+        currentScore = 0;
+        bird.reset(height / 3);
     }
 
     public void changeBirdDirection(){

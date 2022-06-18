@@ -37,15 +37,15 @@ public class Records {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] tmp = line.split(" ");
-                if (tmp.length == 1) throw new RuntimeException("record not contains scores");
+                if (tmp.length == 1) throw new IllegalStateException("record file is corrupted");
                 int record = Integer.parseInt(tmp[1]);
                 if (pos == LENGTH || (pos != 0 && record > records[pos - 1].scores)){
-                    throw new RuntimeException("number of records exceeds exceeds the limit or the order is incorrect\n");
+                    throw new IllegalStateException("number of records exceeds exceeds the limit or the order is incorrect\n");
                 }
                 add(tmp[0], record, records, pos++);
             }
         } catch (IOException | RuntimeException e) {
-            System.out.println("Couldn't load old records: " + e.getMessage());
+            System.err.println("Couldn't load old records: " + e.getMessage());
             return new Records(new Record[10], 0);
         }
         return new Records(records, pos);
@@ -56,7 +56,7 @@ public class Records {
         try{
             Files.writeString(Path.of(RECORDS_FILE), table);
         } catch (IOException e){
-            throw new RuntimeException("Failed to save the records: " + e.getMessage());
+            System.err.println("Failed to save records: " + e);
         }
     }
 
