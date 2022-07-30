@@ -1,4 +1,7 @@
 # Flappy-Bird-Game
-This is a copy of the famous game Flappy Bird using Swing.
+This is a copy of the famous game Flappy Bird using Swing. 
+
+The architecture of the game is based on the pattern
+MVC.
 ___
-![](https://postimg.cc/9RgGrTG5) 
+![](https://i.postimg.cc/hvcMZ1vj/photo-2022-07-30-10-58-07.jpg) 
